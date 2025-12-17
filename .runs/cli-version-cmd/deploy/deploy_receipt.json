@@ -1,0 +1,53 @@
+{
+  "schema_version": "deploy_receipt_v1",
+  "run_id": "cli-version-cmd",
+  "flow": "deploy",
+
+  "status": "UNVERIFIED",
+  "recommended_action": "ESCALATE",
+  "route_to_flow": null,
+  "route_to_agent": null,
+
+  "missing_required": [],
+  "missing_optional": ["flow_plan.md"],
+  "blockers": [
+    "deployment_verdict is NOT_DEPLOYED (push permission denied prevents remote operations)",
+    "branch_protection verification is UNKNOWN (critical check)",
+    "push permission denied prevents remote operations"
+  ],
+  "concerns": [
+    "6 local commits on run/cli-version-cmd remain unpushed",
+    "No PR was created; no merge to mainline occurred",
+    "Gate verdict MERGE could not be executed due to auth barrier"
+  ],
+
+  "deployment_verdict": "NOT_DEPLOYED",
+  "gate_verdict": "MERGE",
+
+  "counts": {
+    "failed_checks": 1,
+    "ci_checks_total": 0,
+    "deploy_events_total": 0,
+    "verification_checks_total": 0
+  },
+
+  "signals": {
+    "ci_signal": "N/A",
+    "deploy_signal": "FAIL",
+    "not_deployed": "yes"
+  },
+
+  "quality_gates": {
+    "deploy_decider": "UNVERIFIED",
+    "verification_report": "UNVERIFIED"
+  },
+
+  "key_artifacts": [
+    "deployment_decision.md",
+    "deployment_log.md",
+    "verification_report.md"
+  ],
+
+  "github_reporting": "PENDING",
+  "completed_at": "2025-12-17T20:08:58Z"
+}
