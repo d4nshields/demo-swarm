@@ -27,8 +27,8 @@
 
 ## After
 - Branch: run/cli-version-cmd
-- Head: (pending commit)
-- Porcelain: untracked signal files remain
+- Head: ec0dd57f61c6b082291a2167ca6cc000f1cf73b0
+- Porcelain: untracked signal files remain (4 files)
 
 ## Notes
 - Tighten-only safety: anomaly detected, proceed_to_github_ops set to false

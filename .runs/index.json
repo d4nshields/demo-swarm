@@ -15,13 +15,13 @@
       "canonical_key": "gh-1",
       "github_repo": "EffortlessMetrics/demo-swarm",
       "issue_number": 1,
-      "last_flow": "plan",
+      "last_flow": "build",
       "pr_number": null,
       "run_id": "cli-version-cmd",
-      "status": "VERIFIED",
+      "status": "PENDING",
       "task_key": null,
       "task_title": "Add demoswarm version CLI subcommand",
-      "updated_at": "2025-12-17T18:08:07Z"
+      "updated_at": "2025-12-17T18:44:00Z"
     }
   ],
   "version": 1
