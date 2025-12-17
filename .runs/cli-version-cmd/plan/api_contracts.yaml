@@ -1,0 +1,479 @@
+# CONTRACT_INVENTORY_V1
+# CLI_COMMAND: demoswarm version
+# CLI_COMMAND: demoswarm --version (existing, unchanged)
+# SCHEMA: VersionInfo
+# EXIT_CODE: 0 (success)
+# EXIT_CODE: 1 (error)
+
+# ==============================================================================
+# CLI Version Subcommand Contract
+# ==============================================================================
+#
+# This run (cli-version-cmd) defines a CLI subcommand, not an HTTP API.
+# The "contract" specifies:
+#   - Command invocation syntax
+#   - Output format (JSON to stdout)
+#   - Exit codes
+#   - Error behavior
+#
+# Decision: OPT-001 (Standalone Module with Typed Struct) per ADR
+# ==============================================================================
+
+contract_version: 1.0.0
+contract_type: cli-subcommand
+decision_ref: OPT-001
+
+# ------------------------------------------------------------------------------
+# Section 1: CLI Command Contract
+# ------------------------------------------------------------------------------
+
+cli_commands:
+  version_subcommand:
+    name: version
+    binary: demoswarm
+    invocation: "demoswarm version"
+    description: |
+      Outputs version information in JSON format to stdout.
+      Designed for machine consumption by CI/CD pipelines, automation scripts,
+      and pack maintainers who need programmatic access to version data.
+
+    synopsis:
+      - "demoswarm version"
+      - "demoswarm version --help"
+
+    arguments: []  # No positional arguments
+
+    options: []  # No options beyond --help (provided by clap)
+
+    output:
+      format: json
+      destination: stdout
+      pretty_printed: true
+      encoding: utf-8
+
+      schema_ref: "#/schemas/VersionInfo"
+
+      example: |
+        {
+          "name": "demoswarm",
+          "version": "0.1.0"
+        }
+
+    exit_codes:
+      - code: 0
+        meaning: Success
+        description: "Version information was successfully written to stdout"
+
+      - code: 1
+        meaning: Error
+        description: "An unexpected error occurred (e.g., stdout write failure)"
+        error_output: stderr
+
+    error_handling:
+      stderr_only: true
+      description: |
+        All error messages are written to stderr, never stdout.
+        JSON output appears on stdout only on success (exit 0).
+        This ensures stdout always contains valid JSON or nothing.
+
+    performance:
+      target_latency_ms: 50
+      max_latency_ms: 1000  # generous timeout for CI
+      io_operations: none
+      network_calls: none
+      description: |
+        The command performs no I/O, no network calls, and no expensive
+        computations. Version string is embedded at compile time.
+
+    determinism:
+      deterministic: true
+      description: |
+        Multiple invocations with the same binary produce identical JSON output.
+        Output contains no timestamps, random values, or environment-dependent content.
+
+    traceability:
+      requirements:
+        - REQ-001  # Version Subcommand Existence
+        - REQ-002  # JSON Version Output
+        - REQ-003  # Version Source (compile-time)
+        - REQ-005  # Integration with Command Enum
+      nfrs:
+        - NFR-PERF-001  # Execution Time
+        - NFR-REL-001   # Deterministic Output
+        - NFR-OPS-001   # Error Handling
+
+  version_flag:
+    name: --version
+    binary: demoswarm
+    invocation: "demoswarm --version"
+    description: |
+      Existing clap-provided version flag. Outputs human-readable version text.
+      This contract documents that it remains UNCHANGED by this feature.
+
+    synopsis:
+      - "demoswarm --version"
+      - "demoswarm -V"
+
+    output:
+      format: plain_text
+      destination: stdout
+      example: "demoswarm 0.1.0"
+
+    exit_codes:
+      - code: 0
+        meaning: Success
+
+    relationship_to_version_subcommand: |
+      The --version flag and version subcommand coexist by design.
+      - --version: Human-readable, plain text (clap convention)
+      - version: Machine-readable, JSON format (automation use case)
+      Both are independently functional per REQ-004.
+
+    traceability:
+      requirements:
+        - REQ-004  # Coexistence with Version Flag
+
+# ------------------------------------------------------------------------------
+# Section 2: JSON Output Schema
+# ------------------------------------------------------------------------------
+
+schemas:
+  VersionInfo:
+    description: |
+      JSON object containing version information for the demoswarm CLI tool.
+      Designed for machine parsing by CI/CD pipelines and automation scripts.
+
+    type: object
+    required:
+      - name
+      - version
+
+    additionalProperties: false
+
+    properties:
+      name:
+        type: string
+        description: "Name of the CLI tool"
+        const: "demoswarm"
+        example: "demoswarm"
+        notes: |
+          Always the literal string "demoswarm" (the binary name).
+          Per ASM-006, this is hardcoded rather than using CARGO_PKG_NAME.
+
+      version:
+        type: string
+        description: "Semantic version string from Cargo.toml"
+        pattern: "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?(\\+[a-zA-Z0-9.]+)?$"
+        example: "0.1.0"
+        source: "env!(\"CARGO_PKG_VERSION\") at compile time"
+        notes: |
+          Follows semver format. Matches the version field in
+          tools/demoswarm-runs-tools/Cargo.toml exactly.
+
+    json_schema:
+      $schema: "https://json-schema.org/draft/2020-12/schema"
+      $id: "demoswarm-version-info-v1"
+      type: object
+      required:
+        - name
+        - version
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          const: "demoswarm"
+        version:
+          type: string
+          pattern: "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?(\\+[a-zA-Z0-9.]+)?$"
+
+    traceability:
+      requirements:
+        - REQ-002  # JSON Version Output (AC-1, AC-2, AC-3)
+      fields:
+        name:
+          requirement: REQ-002
+          acceptance_criteria: AC-2
+        version:
+          requirement: REQ-002
+          acceptance_criteria: AC-3
+
+# ------------------------------------------------------------------------------
+# Section 3: Error Model
+# ------------------------------------------------------------------------------
+
+error_model:
+  description: |
+    Defines error behavior for the version subcommand.
+    Errors are exceptional (command has no failure modes under normal operation).
+
+  error_categories:
+    - category: stdout_write_failure
+      exit_code: 1
+      description: "Failed to write JSON to stdout"
+      stderr_message: "Error: failed to write version output"
+      likelihood: rare
+      cause: "stdout closed, disk full (if redirected), etc."
+
+    - category: serialization_failure
+      exit_code: 1
+      description: "Failed to serialize VersionInfo to JSON"
+      stderr_message: "Error: failed to serialize version info"
+      likelihood: impossible
+      cause: "Would indicate a bug in serde_json; VersionInfo is trivially serializable"
+
+  guarantees:
+    - "Exit code is always 0 or 1"
+    - "Exit 0 implies valid JSON was written to stdout"
+    - "Exit 1 implies error message was written to stderr"
+    - "stdout is never polluted with error messages"
+
+  traceability:
+    nfrs:
+      - NFR-OPS-001  # Error Handling (MET-1, MET-2, MET-3)
+
+# ------------------------------------------------------------------------------
+# Section 4: Compatibility and Versioning
+# ------------------------------------------------------------------------------
+
+compatibility:
+  schema_versioning:
+    strategy: additive_only
+    description: |
+      Future versions may add new fields to VersionInfo (e.g., git_sha, build_date).
+      Existing fields will never be removed or have their types changed.
+      Well-behaved consumers should ignore unknown fields.
+
+  breaking_change_policy:
+    - "Adding new fields: NOT breaking (minor version bump)"
+    - "Removing fields: BREAKING (requires major version bump)"
+    - "Changing field types: BREAKING (requires major version bump)"
+    - "Changing exit codes: BREAKING (requires major version bump)"
+
+  reserved_fields:
+    description: |
+      The following fields are reserved for future use (per RSK-001 mitigation).
+      They are NOT implemented in this version but may be added later.
+    fields:
+      - name: git_sha
+        type: string
+        description: "Git commit SHA at build time"
+      - name: build_date
+        type: string
+        description: "ISO8601 build timestamp"
+      - name: rust_version
+        type: string
+        description: "Rust compiler version used for build"
+
+# ------------------------------------------------------------------------------
+# Section 5: Integration with Existing CLI
+# ------------------------------------------------------------------------------
+
+integration:
+  command_enum:
+    file: "src/commands/mod.rs"
+    variant: "Version(VersionCommand)"
+    description: |
+      A Version variant is added to the Command enum, wrapping a unit struct
+      VersionCommand (no fields/arguments). This follows the pattern of other
+      subcommands like Time.
+
+  dispatch:
+    file: "src/main.rs"
+    function: "execute_command"
+    pattern: "Command::Version(cmd) => commands::version::run(cmd)"
+
+  module:
+    file: "src/commands/version.rs"
+    public_api:
+      - "pub fn run(cmd: VersionCommand) -> Result<()>"
+    internal:
+      - "struct VersionInfo { name: String, version: String }"
+
+  help_integration:
+    description: |
+      The version subcommand appears in `demoswarm --help` output
+      alongside other subcommands (count, index, time, etc.)
+    verification: "demoswarm --help | grep version"
+
+  traceability:
+    requirements:
+      - REQ-001  # AC-3: listed in --help
+      - REQ-005  # Integration with Command Enum
+
+# ------------------------------------------------------------------------------
+# Section 6: Test Contract
+# ------------------------------------------------------------------------------
+
+test_contract:
+  description: |
+    Defines the test surface for the version subcommand.
+    Tests verify the CLI contract is honored.
+
+  integration_tests:
+    - name: "version_subcommand_outputs_json"
+      type: integration
+      tool: assert_cmd
+      verifies:
+        - "Exit code is 0"
+        - "Output is valid JSON"
+        - "Output contains 'name' field with value 'demoswarm'"
+        - "Output contains 'version' field matching semver pattern"
+      command: "demoswarm version"
+      assertions:
+        exit_code: 0
+        stdout_is_json: true
+        stdout_contains_field:
+          - field: name
+            value: "demoswarm"
+          - field: version
+            pattern: "^\\d+\\.\\d+\\.\\d+"
+
+    - name: "version_subcommand_deterministic"
+      type: integration
+      verifies:
+        - "Multiple invocations produce identical output"
+      approach: "Run twice, compare stdout"
+
+    - name: "version_flag_unchanged"
+      type: integration
+      verifies:
+        - "demoswarm --version still produces plain text output"
+        - "Output is NOT JSON"
+      command: "demoswarm --version"
+      assertions:
+        exit_code: 0
+        stdout_not_json: true
+
+  traceability:
+    nfrs:
+      - NFR-COMP-001  # Test Coverage (MET-1, MET-2, MET-3)
+
+# ------------------------------------------------------------------------------
+# Section 7: Documentation Contract
+# ------------------------------------------------------------------------------
+
+documentation:
+  claude_md_update:
+    section: "## CLI Tooling Surface"
+    table: "demoswarm commands"
+    entry:
+      command: "version"
+      purpose: "Output version info as JSON"
+
+    example_output:
+      include: true
+      format: "one-liner inline example"
+      example: '`{"name": "demoswarm", "version": "X.Y.Z"}`'
+
+  traceability:
+    nfrs:
+      - NFR-COMP-002  # Documentation Update (MET-1, MET-2)
+
+# ------------------------------------------------------------------------------
+# Traceability Matrix
+# ------------------------------------------------------------------------------
+
+traceability_matrix:
+  REQ-001:
+    contracts: [version_subcommand]
+    verification: "integration test, --help inspection"
+
+  REQ-002:
+    contracts: [version_subcommand, VersionInfo]
+    verification: "JSON schema validation in test"
+
+  REQ-003:
+    contracts: [version_subcommand]
+    verification: "code review confirms env! macro usage"
+
+  REQ-004:
+    contracts: [version_flag]
+    verification: "integration test for --version"
+
+  REQ-005:
+    contracts: [integration]
+    verification: "code structure review"
+
+  NFR-PERF-001:
+    contracts: [version_subcommand.performance]
+    verification: "timing test with generous timeout"
+
+  NFR-REL-001:
+    contracts: [version_subcommand.determinism]
+    verification: "determinism integration test"
+
+  NFR-OPS-001:
+    contracts: [error_model]
+    verification: "error handling review"
+
+  NFR-COMP-001:
+    contracts: [test_contract]
+    verification: "CI test execution"
+
+  NFR-COMP-002:
+    contracts: [documentation]
+    verification: "CLAUDE.md diff review"
+
+# ------------------------------------------------------------------------------
+# Risk-to-Contract Mapping
+# ------------------------------------------------------------------------------
+
+risk_mitigation:
+  RSK-001:
+    description: "Schema insufficiency for future introspection needs"
+    mitigation_in_contracts:
+      - "reserved_fields documents potential future additions"
+      - "additionalProperties: false enforces schema discipline"
+      - "breaking_change_policy documents extension rules"
+
+  RSK-002:
+    description: "JSON output breaks scalar stdout contract precedent"
+    mitigation_in_contracts:
+      - "contract_type: cli-subcommand explicitly marks this as CLI contract"
+      - "documentation contract ensures CLAUDE.md clearly marks JSON output"
+      - "version_flag contract documents coexistence"
+
+  RSK-005:
+    description: "JSON schema evolution breaking consumers"
+    mitigation_in_contracts:
+      - "schema_versioning strategy: additive_only"
+      - "breaking_change_policy documented"
+      - "consumers advised to ignore unknown fields"
+
+# ------------------------------------------------------------------------------
+# Assumptions
+# ------------------------------------------------------------------------------
+
+assumptions:
+  - id: ASM-001
+    statement: "Minimal JSON schema (name + version) is sufficient"
+    impact_if_wrong: "Add fields later; JSON is extensible"
+    validated_by: "requirements.md"
+
+  - id: ASM-005
+    statement: "Pretty-printed JSON is preferred over compact"
+    impact_if_wrong: "Change to_string_pretty() to to_string()"
+    validated_by: "requirements.md"
+
+  - id: ASM-006
+    statement: "Package name field is literal 'demoswarm', not CARGO_PKG_NAME"
+    impact_if_wrong: "Use env macro instead of hardcoded string"
+    validated_by: "open_questions.md"
+
+# ------------------------------------------------------------------------------
+# Machine Summary
+# ------------------------------------------------------------------------------
+
+machine_summary:
+  status: VERIFIED
+  recommended_action: PROCEED
+  route_to_flow: null
+  route_to_agent: null
+  blockers: []
+  missing_required: []
+  concerns:
+    - "JSON output is first structured output from demoswarm CLI (documented exception)"
+    - "pack-check does not gain a version subcommand (per ASM-004)"
+  cli_commands_count: 2
+  schemas_count: 1
+  exit_codes_count: 2

@@ -1,18 +1,19 @@
 {
   "run_id": "cli-version-cmd",
-  "canonical_key": null,
-  "aliases": ["cli-version-cmd"],
+  "canonical_key": "gh-1",
+  "aliases": ["cli-version-cmd", "gh-1"],
   "task_key": null,
   "task_title": "Add demoswarm version CLI subcommand",
+  "github_repo": "EffortlessMetrics/demo-swarm",
 
   "created_at": "2025-12-17T17:06:51Z",
-  "updated_at": "2025-12-17T17:06:51Z",
-  "iterations": 1,
+  "updated_at": "2025-12-17T17:27:00Z",
+  "iterations": 2,
 
-  "flows_started": ["signal"],
+  "flows_started": ["signal", "plan"],
 
   "source": "fallback",
-  "issue_number": null,
+  "issue_number": 1,
   "pr_number": null,
 
   "supersedes": null,
