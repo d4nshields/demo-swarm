@@ -12,7 +12,7 @@ use anyhow::Result;
 use clap::builder::PossibleValuesParser;
 use clap::{Args, Subcommand};
 use regex::Regex;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use tempfile::NamedTempFile;
 
 use crate::output::print_scalar;
@@ -23,7 +23,10 @@ const PATTERNS: &[(&str, &str)] = &[
     (r"AKIA[0-9A-Z]{16}", "aws-access-key"),
     (r"sk_live_[0-9a-zA-Z]{24,}", "stripe-key"),
     (r"-----BEGIN\s.*PRIVATE KEY-----", "private-key"),
-    (r"eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*", "jwt-token"),
+    (
+        r"eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*",
+        "jwt-token",
+    ),
 ];
 
 #[derive(Args, Debug)]
@@ -138,9 +141,10 @@ fn iter_files(root: &Path) -> Vec<PathBuf> {
             if p.is_dir() {
                 // Skip excluded directories
                 if let Some(name) = p.file_name().and_then(|n| n.to_str())
-                    && EXCLUDED_DIRS.contains(&name) {
-                        continue;
-                    }
+                    && EXCLUDED_DIRS.contains(&name)
+                {
+                    continue;
+                }
                 stack.push(p);
             } else if p.is_file() {
                 out.push(p);
@@ -195,15 +199,13 @@ fn redact(args: &SecretsRedact) -> Result<()> {
     let s = String::from_utf8_lossy(&bytes).to_string();
 
     let redacted = match args.r#type.as_str() {
-        "github-token" => {
-            redact_regex(&s, r"gh[pousr]_[A-Za-z0-9_]{36,}", "[REDACTED:github-token]")
-        }
-        "aws-access-key" => {
-            redact_regex(&s, r"AKIA[0-9A-Z]{16}", "[REDACTED:aws-access-key]")
-        }
-        "stripe-key" => {
-            redact_regex(&s, r"sk_live_[0-9a-zA-Z]{24,}", "[REDACTED:stripe-key]")
-        }
+        "github-token" => redact_regex(
+            &s,
+            r"gh[pousr]_[A-Za-z0-9_]{36,}",
+            "[REDACTED:github-token]",
+        ),
+        "aws-access-key" => redact_regex(&s, r"AKIA[0-9A-Z]{16}", "[REDACTED:aws-access-key]"),
+        "stripe-key" => redact_regex(&s, r"sk_live_[0-9a-zA-Z]{24,}", "[REDACTED:stripe-key]"),
         "jwt-token" => redact_regex(
             &s,
             r"eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*",
@@ -257,7 +259,8 @@ fn redact_private_key_blocks(content: &str) -> String {
 
 fn write_json_atomic(path: &Path, v: &Value) -> Result<()> {
     if let Some(parent) = path.parent()
-        && !parent.as_os_str().is_empty() {
+        && !parent.as_os_str().is_empty()
+    {
         fs::create_dir_all(parent)?;
     }
 
@@ -265,13 +268,13 @@ fn write_json_atomic(path: &Path, v: &Value) -> Result<()> {
     // This ensures they're on the same filesystem for atomic rename
     let parent_dir = path.parent().unwrap_or_else(|| Path::new("."));
     let mut tmp = NamedTempFile::new_in(parent_dir)?;
-    
+
     // Write the JSON content to the temporary file
     tmp.write_all(format!("{}\n", serde_json::to_string_pretty(v)?).as_bytes())?;
-    
+
     // Persist the temporary file to the target path
     // This is an atomic operation that replaces the target if it exists
     tmp.persist(path)?;
-    
+
     Ok(())
 }

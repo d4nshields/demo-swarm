@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use regex::Regex;
 
-use crate::output::{print_count, print_null, print_scalar};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_count, print_null, print_scalar};
 
 #[derive(Args, Debug)]
 pub struct YamlCommand {
@@ -53,9 +53,7 @@ pub fn run(cmd: YamlCommand) -> Result<()> {
     match cmd.command {
         YamlSubcommand::Get { file, key, .. } => extract_yaml_field(&file, &key),
         YamlSubcommand::CountItems {
-            file,
-            item_regex,
-            ..
+            file, item_regex, ..
         } => count_yaml_items(&file, &item_regex),
     }
 }
@@ -95,7 +93,8 @@ fn extract_yaml_field(file: &str, key: &str) -> Result<()> {
 
     for line in yaml_block.lines() {
         if let Some(caps) = regex.captures(line)
-            && let Some(value) = caps.get(1) {
+            && let Some(value) = caps.get(1)
+        {
             let mut val = value.as_str().trim();
 
             // Remove quotes if present
@@ -147,7 +146,10 @@ fn count_yaml_items(file: &str, pattern: &str) -> Result<()> {
         }
     };
 
-    let count = yaml_block.lines().filter(|line| regex.is_match(line)).count();
+    let count = yaml_block
+        .lines()
+        .filter(|line| regex.is_match(line))
+        .count();
     print_count(count);
     Ok(())
 }

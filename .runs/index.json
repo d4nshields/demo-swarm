@@ -18,10 +18,10 @@
       "last_flow": "build",
       "pr_number": null,
       "run_id": "cli-version-cmd",
-      "status": "PENDING",
+      "status": "VERIFIED",
       "task_key": null,
       "task_title": "Add demoswarm version CLI subcommand",
-      "updated_at": "2025-12-17T18:44:00Z"
+      "updated_at": "2025-12-17T19:08:00Z"
     }
   ],
   "version": 1

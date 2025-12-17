@@ -118,6 +118,7 @@ fn execute_command(cmd: Command) -> anyhow::Result<()> {
         Command::Time(sub) => commands::time::run(sub),
         Command::Openq(sub) => commands::openq::run(sub),
         Command::Secrets(sub) => commands::secrets::run(sub),
+        Command::Version(sub) => commands::version::run(sub),
     }
 }
 

@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use regex::Regex;
 
-use crate::output::{print_count, print_null};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_count, print_null};
 
 #[derive(Args, Debug)]
 pub struct OpenapiCommand {
@@ -67,7 +67,8 @@ fn count_openapi_paths(file: &str) -> Result<()> {
 
     for (i, line) in lines.iter().enumerate() {
         if let Some(captures) = paths_regex.captures(line)
-            && let Some(m) = captures.get(1) {
+            && let Some(m) = captures.get(1)
+        {
             paths_indent = Some(m.as_str().len());
             start_idx = i + 1;
             break;

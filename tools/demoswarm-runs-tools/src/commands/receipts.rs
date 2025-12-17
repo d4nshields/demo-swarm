@@ -5,8 +5,8 @@ use std::path::Path;
 use anyhow::Result;
 use clap::{Args, Subcommand};
 
-use crate::output::{print_count, print_null};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_count, print_null};
 
 #[derive(Args, Debug)]
 pub struct ReceiptsCommand {

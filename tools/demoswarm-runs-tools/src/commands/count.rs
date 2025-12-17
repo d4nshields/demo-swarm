@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use regex::Regex;
 
-use crate::output::{print_count, print_null};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_count, print_null};
 
 #[derive(Args, Debug)]
 pub struct CountCommand {
@@ -66,7 +66,12 @@ pub fn run(cmd: CountCommand) -> Result<()> {
     }
 }
 
-fn count_pattern(file: &str, pattern: &str, fallback: Option<&str>, null_if_zero: bool) -> Result<()> {
+fn count_pattern(
+    file: &str,
+    pattern: &str,
+    fallback: Option<&str>,
+    null_if_zero: bool,
+) -> Result<()> {
     let path = Path::new(file);
     if !path.is_file() {
         print_null();
@@ -94,8 +99,12 @@ fn count_pattern(file: &str, pattern: &str, fallback: Option<&str>, null_if_zero
     // Try fallback if primary returns 0
     if count == 0
         && let Some(fb_pattern) = fallback
-        && let Ok(fb_regex) = Regex::new(fb_pattern) {
-        let fb_count = content.lines().filter(|line| fb_regex.is_match(line)).count();
+        && let Ok(fb_regex) = Regex::new(fb_pattern)
+    {
+        let fb_count = content
+            .lines()
+            .filter(|line| fb_regex.is_match(line))
+            .count();
         count = fb_count;
     }
 
@@ -128,7 +137,8 @@ fn count_bdd_scenarios(dir: &str) -> Result<()> {
     for entry in walkdir(path) {
         if let Some(ext) = entry.extension()
             && ext == "feature"
-            && let Ok(content) = fs::read_to_string(&entry) {
+            && let Ok(content) = fs::read_to_string(&entry)
+        {
             total += content
                 .lines()
                 .filter(|line| scenario_regex.is_match(line))

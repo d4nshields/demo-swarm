@@ -108,7 +108,8 @@ fn compute_next_id(file: &str, prefix: &str) -> String {
     let mut max_n: Option<u32> = None;
     for caps in re.captures_iter(&content) {
         if let Some(m) = caps.get(1)
-            && let Ok(n) = m.as_str().parse::<u32>() {
+            && let Ok(n) = m.as_str().parse::<u32>()
+        {
             max_n = Some(max_n.map_or(n, |x| x.max(n)));
         }
     }
@@ -124,7 +125,8 @@ fn append_openq(args: &OpenqAppend, qid: &str) -> Result<()> {
     let path = Path::new(&args.file);
 
     if let Some(parent) = path.parent()
-        && !parent.as_os_str().is_empty() {
+        && !parent.as_os_str().is_empty()
+    {
         fs::create_dir_all(parent)?;
     }
 

@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use serde_json::Value;
 
-use crate::output::{print_null, print_scalar};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_null, print_scalar};
 
 #[derive(Args, Debug)]
 pub struct ReceiptCommand {
