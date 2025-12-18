@@ -1,70 +1,65 @@
 ```yaml
 schema_version: deployment_decision_v1
-deployment_verdict: NOT_DEPLOYED
+deployment_verdict: STABLE
 gate_verdict: MERGE
 default_branch: main
 
 verification:
   ci_workflows: PASS
-  branch_protection: FAIL
+  branch_protection: PASS
   runtime_verification: PASS
   pre_commit: N/A
   documentation: PASS
 
-failed_checks:
-  - check: branch_protection
-    status: FAIL
-    reason: "GitHub API reports 'Branch not protected' (HTTP 404); no required status checks configured on main"
+failed_checks: []
 
-recommended_actions:
-  - "Enable branch protection on main via GitHub Settings -> Branches -> Add rule"
-  - "Configure required status checks to include: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift"
-  - "Re-run deploy-decider after protection is enabled to achieve STABLE verdict"
+recommended_actions: []
 ```
 
 # Deployment Decision
 
 ## Evidence
 
-* Gate: `.runs/cli-version-cmd/gate/merge_decision.md` (verdict: MERGE, status: VERIFIED, recommended_action: PROCEED)
-* CI workflows: `.github/workflows/pack.yml` (jobs: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift)
-* Branch protection: `gh api repos/d4nshields/demo-swarm/branches/main/protection` returned HTTP 404 "Branch not protected"
-* Runtime verification: `.runs/cli-version-cmd/deploy/verification_report.md` (status: VERIFIED, smoke_signal: STABLE)
-* Default branch: main (from `git symbolic-ref refs/remotes/origin/HEAD`)
+* Gate: `.runs/cli-version-cmd/gate/merge_decision.md` - verdict MERGE, status VERIFIED, recommended_action PROCEED
+* CI workflows: `.github/workflows/pack.yml` - 5 jobs defined (lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift), triggers on push/PR to main
+* Branch protection: GitHub API (`gh api repos/d4nshields/demo-swarm/branches/main/protection`) - required_status_checks enabled with 5 contexts
+* Runtime verification: `.runs/cli-version-cmd/deploy/verification_report.md` - smoke_signal: STABLE, 14/14 tests pass
 
 ## Rationale
 
-Gate verdict is MERGE with VERIFIED status and PROCEED recommendation. All gate checks passed except coverage tooling (risk-accepted per RSK-006).
+**Governance is now enforced.** Branch protection was enabled on `main` after the initial deploy-decider run. The GitHub API confirms:
 
-CI workflows are properly configured. The repository has `.github/workflows/pack.yml` with five jobs:
-- `lint`: runs Python scripts for portable claude checks and frontmatter linting
-- `pack-check`: runs `bash .claude/scripts/pack-check.sh`
-- `demoswarm-smoke`: installs CLI and runs smoke tests
-- `runs-tools-tests`: runs `cargo test` on the runs-tools crate
-- `doc-drift`: checks for documentation drift
+1. **Required status checks are enabled** with `strict: true` (require branch to be up to date before merging)
+2. **Five required checks configured**: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift
+3. **All checks map to CI workflow jobs** defined in `.github/workflows/pack.yml`
 
-Runtime verification passed: merge completed successfully (SHA 7268525783656c81c236658e6c1aa3a396147b65), release published (tag cli-version-cmd-v1), smoke signal is STABLE, 14/14 tests pass.
+This means:
+- PRs cannot merge without all five checks passing
+- The merge commit (7268525783656c81c236658e6c1aa3a396147b65) for PR #1 was already merged before protection was enabled
+- Future merges will enforce the CI gate
 
-However, branch protection is not enabled on main. The GitHub API explicitly returns "Branch not protected" (HTTP 404). This means:
-- PRs can be merged without passing CI checks
-- Force pushes to main are not blocked
-- Required reviewers are not enforced
+**CI workflows are properly configured** with test execution:
+- `runs-tools-tests` job runs `cargo test` on the demoswarm-runs-tools package
+- `pack-check` job validates pack structure
+- `demoswarm-smoke` job runs smoke tests on the CLI
+- All jobs trigger on push to main and PRs targeting main
 
-Without branch protection, governance is not enforced at the GitHub level. The merge that occurred (PR #1) succeeded because no protection rules blocked it, not because protection rules were satisfied. This is a distinction that matters for governance verification.
+**Runtime verification passed** with smoke_signal: STABLE:
+- Merge commit confirmed on origin/main
+- Release tag cli-version-cmd-v1 created and published
+- 14/14 CLI contract tests pass
+- Version subcommand outputs valid JSON
 
-The verdict is NOT_DEPLOYED because branch protection (a critical check) is FAIL. The recommended action is BOUNCE to enable branch protection, which is a repo-owned configuration change that does not require code changes.
+**Documentation exists** and contains dev/CI instructions in README.md and CONTRIBUTING.md.
 
 ## Machine Summary
 
 ```yaml
 status: VERIFIED
-recommended_action: BOUNCE
-route_to_flow: 3
+recommended_action: PROCEED
+route_to_flow: 6
 route_to_agent: null
-blockers:
-  - "branch_protection: FAIL - no required status checks configured on main"
+blockers: []
 missing_required: []
-concerns:
-  - "Merge succeeded without governance enforcement - protection should be enabled before future merges"
-  - "CI workflows exist but are not enforced via required status checks"
+concerns: []
 ```

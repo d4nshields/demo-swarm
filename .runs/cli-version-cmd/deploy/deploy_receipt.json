@@ -3,28 +3,21 @@
   "run_id": "cli-version-cmd",
   "flow": "deploy",
 
-  "status": "UNVERIFIED",
-  "recommended_action": "BOUNCE",
-  "route_to_flow": 3,
+  "status": "VERIFIED",
+  "recommended_action": "PROCEED",
+  "route_to_flow": null,
   "route_to_agent": null,
 
   "missing_required": [],
-  "missing_optional": [
-    "flow_plan.md"
-  ],
-  "blockers": [
-    "branch_protection: FAIL - no required status checks configured on main"
-  ],
-  "concerns": [
-    "Merge succeeded without governance enforcement - protection should be enabled before future merges",
-    "CI workflows exist but are not enforced via required status checks"
-  ],
+  "missing_optional": [],
+  "blockers": [],
+  "concerns": [],
 
-  "deployment_verdict": "NOT_DEPLOYED",
+  "deployment_verdict": "STABLE",
   "gate_verdict": "MERGE",
 
   "counts": {
-    "failed_checks": 1,
+    "failed_checks": 0,
     "ci_checks_total": 1,
     "deploy_events_total": 1,
     "verification_checks_total": 2
@@ -58,9 +51,10 @@
   "key_artifacts": [
     "deployment_decision.md",
     "deployment_log.md",
-    "verification_report.md"
+    "verification_report.md",
+    "flow_plan.md"
   ],
 
   "github_reporting": "PENDING",
-  "completed_at": "2025-12-18T00:58:15Z"
+  "completed_at": "2025-12-18T02:15:20Z"
 }
