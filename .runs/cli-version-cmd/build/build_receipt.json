@@ -1,0 +1,65 @@
+{
+  "schema_version": "build_receipt_v1",
+  "run_id": "cli-version-cmd",
+  "flow": "build",
+
+  "status": "VERIFIED",
+  "recommended_action": "PROCEED",
+  "route_to_flow": null,
+  "route_to_agent": null,
+
+  "missing_required": [],
+  "missing_optional": [
+    ".runs/cli-version-cmd/build/flow_plan.md",
+    ".runs/cli-version-cmd/build/fix_summary.md"
+  ],
+  "blockers": [],
+  "concerns": [
+    "mutation_report.md is stale (written when tests were failing); mutation_required: false per test_plan.md so non-blocking",
+    "Advisory clippy warning in test code (map_or can be simplified); non-blocking"
+  ],
+
+  "counts": {
+    "tests_written": 1,
+    "files_changed": 3,
+    "mutation_score": null,
+    "open_questions": 5
+  },
+
+  "tests": {
+    "summary_source": "build/test_execution.md",
+    "canonical_summary": "passed=14 failed=0 skipped=0 xfailed=null xpassed=null",
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": null,
+    "xpassed": null,
+    "metrics_binding": "test_execution:test-runner"
+  },
+
+  "critic_verdicts": {
+    "test_critic": "VERIFIED",
+    "code_critic": "VERIFIED"
+  },
+
+  "quality_gates": {
+    "test_critic": "VERIFIED",
+    "code_critic": "VERIFIED",
+    "self_reviewer": "VERIFIED"
+  },
+
+  "key_artifacts": [
+    "self_review.md",
+    "test_changes_summary.md",
+    "impl_changes_summary.md",
+    "test_execution.md",
+    "test_critique.md",
+    "code_critique.md",
+    "mutation_report.md",
+    "fix_summary.md",
+    "doc_updates.md"
+  ],
+
+  "github_reporting": "PENDING",
+  "completed_at": "2025-12-17T19:08:00Z"
+}

@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+
+  "status": "VERIFIED",
+  "recommended_action": "PROCEED",
+  "route_to_flow": null,
+  "route_to_agent": null,
+
+  "blockers": [],
+  "missing_required": [],
+  "concerns": [
+    "JSON output represents first structured output from demoswarm CLI (deviation from scalar contract)",
+    "Python fallback (runs_tools.py) will need version subcommand for parity"
+  ],
+  "assumptions": [
+    "ASM-001: Minimal JSON schema (name + version) is sufficient",
+    "ASM-002: JSON output is acceptable deviation from scalar contract for version subcommand",
+    "ASM-003: The --version flag and version subcommand coexist by design",
+    "ASM-004: pack-check version subcommand is out of scope"
+  ],
+
+  "impact_summary": {
+    "total_files": 8,
+    "high_risk": 0,
+    "medium_risk": 3,
+    "low_risk": 5
+  },
+
+  "context": {
+    "flow": "plan",
+    "run_id": "cli-version-cmd",
+    "inputs_used": [
+      ".runs/cli-version-cmd/signal/requirements.md",
+      ".runs/cli-version-cmd/signal/problem_statement.md",
+      ".runs/cli-version-cmd/signal/context_brief.md",
+      ".runs/cli-version-cmd/run_meta.json"
+    ],
+    "search_terms": [
+      "version",
+      "Command",
+      "clap",
+      "demoswarm",
+      "subcommand",
+      "time.rs",
+      "serde_json",
+      "CARGO_PKG_VERSION"
+    ]
+  },
+
+  "affected": [
+    {
+      "id": "IMP-001",
+      "kind": "code",
+      "path": "tools/demoswarm-runs-tools/src/commands/version.rs",
+      "change_type": "NEW",
+      "risk": "MEDIUM",
+      "confidence": "HIGH",
+      "summary": "New subcommand module implementing version JSON output",
+      "evidence": [
+        "REQ-002 specifies JSON version output",
+        "REQ-005 specifies minimal subcommand pattern comparable to time.rs",
+        "context_brief.md identifies this as new file"
+      ],
+      "depends_on": [
+        "tools/demoswarm-runs-tools/Cargo.toml"
+      ],
+      "depended_on_by": [
+        "tools/demoswarm-runs-tools/src/commands/mod.rs",
+        "tools/demoswarm-runs-tools/src/main.rs"
+      ],
+      "tests_referencing": [],
+      "notes": [
+        "Will use env!(\"CARGO_PKG_VERSION\") for compile-time version",
+        "Will output pretty-printed JSON via serde_json::to_string_pretty()"
+      ]
+    },
+    {
+      "id": "IMP-002",
+      "kind": "code",
+      "path": "tools/demoswarm-runs-tools/src/commands/mod.rs",
+      "change_type": "MODIFIED",
+      "risk": "MEDIUM",
+      "confidence": "HIGH",
+      "summary": "Add Version variant to Command enum and pub mod version",
+      "evidence": [
+        "grep:Command:: hit at tools/demoswarm-runs-tools/src/main.rs (lines 109-120)",
+        "REQ-005 AC-1 requires Version variant in Command enum",
+        "Existing pattern: pub mod time; at line 16"
+      ],
+      "depends_on": [
+        "tools/demoswarm-runs-tools/src/commands/version.rs"
+      ],
+      "depended_on_by": [
+        "tools/demoswarm-runs-tools/src/main.rs"
+      ],
+      "tests_referencing": [],
+      "notes": [
+        "Will add: pub mod version;",
+        "Will add: Version(version::VersionCommand) to Command enum"
+      ]
+    },
+    {
+      "id": "IMP-003",
+      "kind": "code",
+      "path": "tools/demoswarm-runs-tools/src/main.rs",
+      "change_type": "MODIFIED",
+      "risk": "MEDIUM",
+      "confidence": "HIGH",
+      "summary": "Add Command::Version dispatch arm in execute_command()",
+      "evidence": [
+        "grep:Command:: hits at lines 109-120 show execute_command match arms",
+        "REQ-005 AC-2 requires execute_command dispatch for Version"
+      ],
+      "depends_on": [
+        "tools/demoswarm-runs-tools/src/commands/mod.rs"
+      ],
+      "depended_on_by": [],
+      "tests_referencing": [
+        "tools/demoswarm-runs-tools/tests/cli_contract.rs"
+      ],
+      "notes": [
+        "Will add: Command::Version(sub) => commands::version::run(sub)"
+      ]
+    },
+    {
+      "id": "IMP-004",
+      "kind": "test",
+      "path": "tools/demoswarm-runs-tools/tests/cli_contract.rs",
+      "change_type": "MODIFIED",
+      "risk": "LOW",
+      "confidence": "HIGH",
+      "summary": "Add test for version subcommand JSON output",
+      "evidence": [
+        "NFR-COMP-001 MET-1 requires integration test for JSON structure",
+        "NFR-COMP-001 MET-2 requires test assert presence of name and version fields",
+        "Existing tests use demoswarm() helper and assert_cmd"
+      ],
+      "depends_on": [
+        "tools/demoswarm-runs-tools/src/commands/version.rs"
+      ],
+      "depended_on_by": [],
+      "tests_referencing": [],
+      "notes": [
+        "Test will verify JSON parsability and field presence",
+        "Test will verify exit code 0"
+      ]
+    },
+    {
+      "id": "IMP-005",
+      "kind": "doc",
+      "path": "CLAUDE.md",
+      "change_type": "MODIFIED",
+      "risk": "LOW",
+      "confidence": "HIGH",
+      "summary": "Add version command to demoswarm CLI table",
+      "evidence": [
+        "NFR-COMP-002 MET-1 requires CLAUDE.md demoswarm CLI table update",
+        "grep:demoswarm hit at lines 487-505 shows existing command table"
+      ],
+      "depends_on": [],
+      "depended_on_by": [],
+      "tests_referencing": [],
+      "notes": [
+        "Will add row: | version | Print version as JSON |"
+      ]
+    },
+    {
+      "id": "IMP-006",
+      "kind": "code",
+      "path": ".claude/skills/runs-derive/fallback/runs_tools.py",
+      "change_type": "MODIFIED",
+      "risk": "LOW",
+      "confidence": "MEDIUM",
+      "summary": "Add version subcommand to Python fallback for parity",
+      "evidence": [
+        "runs_tools.py mirrors Rust CLI structure (docstring lines 7-23)",
+        "Shim resolution order includes Python fallback (demoswarm.sh line 57-64)"
+      ],
+      "depends_on": [],
+      "depended_on_by": [],
+      "tests_referencing": [],
+      "notes": [
+        "Inferred requirement for fallback parity",
+        "Python version would need hardcoded version string or setup.py version read"
+      ]
+    },
+    {
+      "id": "IMP-007",
+      "kind": "config",
+      "path": "tools/demoswarm-runs-tools/Cargo.toml",
+      "change_type": "UNKNOWN",
+      "risk": "LOW",
+      "confidence": "HIGH",
+      "summary": "Version string source - no changes expected but verified as source",
+      "evidence": [
+        "REQ-003 AC-2 requires version match Cargo.toml package version",
+        "Cargo.toml line 3: version = \"1.0.1\""
+      ],
+      "depends_on": [],
+      "depended_on_by": [
+        "tools/demoswarm-runs-tools/src/commands/version.rs"
+      ],
+      "tests_referencing": [],
+      "notes": [
+        "No modification expected - serves as source of truth",
+        "env!(\"CARGO_PKG_VERSION\") reads this at compile time"
+      ]
+    },
+    {
+      "id": "IMP-008",
+      "kind": "doc",
+      "path": ".claude/skills/runs-derive/SKILL.md",
+      "change_type": "MODIFIED",
+      "risk": "LOW",
+      "confidence": "MEDIUM",
+      "summary": "May need version command in command reference table",
+      "evidence": [
+        "SKILL.md lines 50-62 document command reference table",
+        "Skill documents demoswarm CLI usage"
+      ],
+      "depends_on": [],
+      "depended_on_by": [],
+      "tests_referencing": [],
+      "notes": [
+        "Inferred - depends on whether version is considered a runs-derive command or separate concern"
+      ]
+    }
+  ],
+
+  "interfaces_impacted": {
+    "api_endpoints": [],
+    "data_entities": [],
+    "events": []
+  },
+
+  "configuration_impact": [],
+
+  "test_impact": [
+    {
+      "path": "tools/demoswarm-runs-tools/tests/cli_contract.rs",
+      "reason": "New test required per NFR-COMP-001"
+    }
+  ],
+
+  "external_dependencies": [],
+
+  "recommended_next": [
+    "Proceed to design (ADR) to finalize JSON schema and serialization approach",
+    "Confirm Python fallback parity requirement with stakeholders",
+    "Determine if SKILL.md update is in scope or deferred"
+  ],
+
+  "completed_at": "2025-12-17T18:00:00Z"
+}

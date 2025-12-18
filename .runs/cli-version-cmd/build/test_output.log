@@ -1,0 +1,73 @@
+[1m[92m   Compiling[0m predicates v3.1.3
+[1m[92m   Compiling[0m assert_cmd v2.1.1
+[1m[92m   Compiling[0m demoswarm-runs-tools v1.0.1 (/home/daniel/work/demo-swarm/tools/demoswarm-runs-tools)
+[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`test` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.78s
+[1m[92m     Running[0m tests/cli_contract.rs (target/debug/deps/cli_contract-b0e6f4e1690a4b5a)
+
+running 14 tests
+test ms_get_missing_file_returns_null_and_zero_exit ... ok
+test invalid_regex_does_not_break_contract ... ok
+test count_pattern_honors_null_if_zero_flag ... ok
+test version_subcommand_exits_successfully ... ok
+test version_flag_outputs_plain_text ... ok
+test version_json_contains_version_field ... FAILED
+test version_json_contains_name_field ... FAILED
+test version_json_is_pretty_printed ... FAILED
+test version_success_writes_stdout_only ... FAILED
+test version_subcommand_outputs_valid_json ... ok
+test version_subcommand_appears_in_help ... ok
+test version_matches_cargo_toml ... FAILED
+test version_output_is_deterministic ... ok
+test version_flag_and_subcommand_coexist ... FAILED
+
+failures:
+
+---- version_json_contains_version_field stdout ----
+
+thread 'version_json_contains_version_field' (4015092) panicked at tests/cli_contract.rs:94:5:
+JSON should contain 'version' field
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- version_json_contains_name_field stdout ----
+
+thread 'version_json_contains_name_field' (4015091) panicked at tests/cli_contract.rs:73:5:
+JSON should contain 'name' field
+
+---- version_json_is_pretty_printed stdout ----
+
+thread 'version_json_is_pretty_printed' (4015096) panicked at tests/cli_contract.rs:119:5:
+pretty-printed JSON should span multiple lines
+
+---- version_success_writes_stdout_only stdout ----
+
+thread 'version_success_writes_stdout_only' (4015129) panicked at tests/cli_contract.rs:276:5:
+stderr should be empty on success, got: 'error: unrecognized subcommand 'version'
+
+Usage: demoswarm <COMMAND>
+
+For more information, try '--help'.
+
+'
+
+---- version_matches_cargo_toml stdout ----
+
+thread 'version_matches_cargo_toml' (4015097) panicked at tests/cli_contract.rs:142:51:
+version should be a string
+
+---- version_flag_and_subcommand_coexist stdout ----
+
+thread 'version_flag_and_subcommand_coexist' (4015087) panicked at tests/cli_contract.rs:219:51:
+JSON should have version
+
+
+failures:
+    version_flag_and_subcommand_coexist
+    version_json_contains_name_field
+    version_json_contains_version_field
+    version_json_is_pretty_printed
+    version_matches_cargo_toml
+    version_success_writes_stdout_only
+
+test result: FAILED. 8 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+[1m[91merror[0m: test failed, to rerun pass `--test cli_contract`

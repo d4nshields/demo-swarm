@@ -6,8 +6,8 @@ use std::path::Path;
 use anyhow::Result;
 use clap::{Args, Subcommand};
 
-use crate::output::{print_null, print_scalar};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_null, print_scalar};
 
 #[derive(Args, Debug)]
 pub struct LineCommand {

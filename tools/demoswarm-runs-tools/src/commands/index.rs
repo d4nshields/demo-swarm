@@ -5,7 +5,7 @@ use std::path::Path;
 
 use anyhow::Result;
 use clap::{Args, Subcommand};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 use crate::output::{print_null, print_ok, print_scalar};
 
@@ -102,7 +102,8 @@ fn upsert_status(
     let mut found = false;
     for entry in runs.iter_mut() {
         if let Some(id) = entry.get("run_id").and_then(|v| v.as_str())
-            && id == run_id {
+            && id == run_id
+        {
             entry["status"] = json!(status);
             entry["last_flow"] = json!(last_flow);
             entry["updated_at"] = json!(ts);

@@ -1,0 +1,60 @@
+{
+  "run_id": "cli-version-cmd",
+  "flow": "plan",
+
+  "status": "VERIFIED",
+  "recommended_action": "PROCEED",
+  "route_to_flow": null,
+  "route_to_agent": null,
+
+  "missing_required": [],
+  "missing_optional": [],
+  "blockers": [],
+  "concerns": [
+    "work_plan.md Machine Summary shows stale missing_required entries (test_plan.md and observability_spec.md exist)",
+    "ST-006 (Python fallback) is marked optional but lacks clear decision on whether it blocks this run",
+    "JSON output represents first structured output from demoswarm CLI (documented exception per ASM-002)"
+  ],
+
+  "counts": {
+    "design_options": 3,
+    "subtasks_total": 7,
+    "open_questions": 5,
+    "contract_endpoints": null,
+    "test_plan_entries": null
+  },
+
+  "quality_gates": {
+    "design_critic": "VERIFIED",
+    "policy_analyst": "VERIFIED"
+  },
+
+  "decision_spine": {
+    "status": "VERIFIED",
+    "design_options": {
+      "has_machine_summary": true,
+      "status": "VERIFIED",
+      "recommendation": "OPT-001",
+      "confidence": "High"
+    },
+    "adr": {
+      "has_machine_summary": true,
+      "status": "VERIFIED",
+      "chosen_option": "OPT-001",
+      "drivers_total": 4
+    }
+  },
+
+  "key_artifacts": [
+    "design_options.md",
+    "adr.md",
+    "design_validation.md",
+    "test_plan.md",
+    "work_plan.md",
+    "policy_analysis.md",
+    "impact_map.json"
+  ],
+
+  "github_reporting": "PENDING",
+  "completed_at": "2025-12-17T18:08:07Z"
+}

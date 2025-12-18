@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use regex::Regex;
 
-use crate::output::{print_null, print_scalar};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_null, print_scalar};
 
 #[derive(Args, Debug)]
 pub struct MsCommand {
@@ -41,10 +41,7 @@ pub enum MsSubcommand {
 pub fn run(cmd: MsCommand) -> Result<()> {
     match cmd.command {
         MsSubcommand::Get {
-            file,
-            section,
-            key,
-            ..
+            file, section, key, ..
         } => extract_machine_field(&file, &section, &key),
     }
 }
@@ -85,7 +82,8 @@ fn extract_machine_field(file: &str, section: &str, key: &str) -> Result<()> {
 
     for line in section_content.lines() {
         if let Some(caps) = regex.captures(line)
-            && let Some(value) = caps.get(1) {
+            && let Some(value) = caps.get(1)
+        {
             let val = value.as_str().trim();
 
             // Template leak guard

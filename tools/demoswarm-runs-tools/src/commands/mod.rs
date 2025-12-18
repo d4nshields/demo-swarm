@@ -14,6 +14,7 @@ pub mod receipt;
 pub mod receipts;
 pub mod secrets;
 pub mod time;
+pub mod version;
 pub mod yaml;
 
 /// Deterministic helpers for .runs/ operations.
@@ -62,4 +63,7 @@ pub enum Command {
 
     /// Secrets scanning and redaction
     Secrets(secrets::SecretsCommand),
+
+    /// Output version information as JSON
+    Version(version::VersionCommand),
 }

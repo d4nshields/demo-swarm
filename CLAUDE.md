@@ -486,6 +486,7 @@ bash .claude/scripts/demoswarm.sh <command> [options]
 
 | Command | Purpose |
 |---------|---------|
+| `version` | Output version info as JSON (`{"name": "demoswarm", "version": "X.Y.Z"}`) |
 | `count pattern --file X --regex Y` | Null-safe grep count |
 | `count bdd --dir X` | BDD scenario count |
 | `ms get --file X --section Y --key Z` | Extract Machine Summary field |

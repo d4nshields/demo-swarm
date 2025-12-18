@@ -10,6 +10,18 @@
       "task_key": null,
       "task_title": "Normalize language and ownership boundaries across DemoSwarm pack",
       "updated_at": "2025-12-13T11:40:10Z"
+    },
+    {
+      "canonical_key": "gh-1",
+      "github_repo": "EffortlessMetrics/demo-swarm",
+      "issue_number": 1,
+      "last_flow": "deploy",
+      "pr_number": null,
+      "run_id": "cli-version-cmd",
+      "status": "UNVERIFIED",
+      "task_key": null,
+      "task_title": "Add demoswarm version CLI subcommand",
+      "updated_at": "2025-12-17T20:08:58Z"
     }
   ],
   "version": 1

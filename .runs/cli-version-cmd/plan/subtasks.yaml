@@ -1,0 +1,148 @@
+schema_version: subtasks_v1
+subtasks:
+  - id: ST-001
+    title: "Create version.rs command module with VersionInfo struct"
+    status: TODO
+    depends_on: []
+    req_ids: ["REQ-002", "REQ-003", "REQ-005"]
+    nfr_ids: ["NFR-PERF-001", "NFR-REL-001"]
+    acceptance_criteria:
+      - "File exists at tools/demoswarm-runs-tools/src/commands/version.rs"
+      - "VersionInfo struct has name field (String) and version field (String)"
+      - "Struct derives Serialize from serde"
+      - "run() function accepts VersionCommand and returns anyhow::Result<()>"
+      - "Version sourced from env!(\"CARGO_PKG_VERSION\") at compile time"
+      - "JSON output via serde_json::to_string_pretty()"
+      - "Output printed to stdout (not using print_scalar, which is for scalars)"
+    scope_hints:
+      code_roots: ["tools/demoswarm-runs-tools/src/commands/"]
+      test_roots: []
+      doc_paths: []
+      allow_new_files_under: ["tools/demoswarm-runs-tools/src/commands/"]
+    touches: ["tools/demoswarm-runs-tools/src/commands/version.rs"]
+    tests: []
+    observability: []
+    estimate: S
+
+  - id: ST-002
+    title: "Add Version variant to Command enum in mod.rs"
+    status: TODO
+    depends_on: ["ST-001"]
+    req_ids: ["REQ-005"]
+    nfr_ids: []
+    acceptance_criteria:
+      - "pub mod version; declaration added to mod.rs"
+      - "Version(version::VersionCommand) variant added to Command enum"
+      - "Version variant has doc comment /// Print version as JSON"
+      - "Code compiles without warnings"
+    scope_hints:
+      code_roots: ["tools/demoswarm-runs-tools/src/commands/"]
+      test_roots: []
+      doc_paths: []
+      allow_new_files_under: []
+    touches: ["tools/demoswarm-runs-tools/src/commands/mod.rs"]
+    tests: []
+    observability: []
+    estimate: S
+
+  - id: ST-003
+    title: "Add Command::Version dispatch in main.rs execute_command"
+    status: TODO
+    depends_on: ["ST-002"]
+    req_ids: ["REQ-001", "REQ-005"]
+    nfr_ids: []
+    acceptance_criteria:
+      - "Command::Version(sub) => commands::version::run(sub) match arm added"
+      - "demoswarm version executes without error"
+      - "demoswarm --help lists version subcommand"
+    scope_hints:
+      code_roots: ["tools/demoswarm-runs-tools/src/"]
+      test_roots: []
+      doc_paths: []
+      allow_new_files_under: []
+    touches: ["tools/demoswarm-runs-tools/src/main.rs"]
+    tests: []
+    observability: []
+    estimate: S
+
+  - id: ST-004
+    title: "Add integration test for version subcommand"
+    status: TODO
+    depends_on: ["ST-003"]
+    req_ids: ["REQ-001", "REQ-002"]
+    nfr_ids: ["NFR-COMP-001", "NFR-REL-001"]
+    acceptance_criteria:
+      - "Test verifies exit code 0 on success"
+      - "Test verifies stdout contains valid JSON"
+      - "Test verifies JSON has name field with value demoswarm"
+      - "Test verifies JSON has version field that is non-empty"
+      - "Test passes with cargo test"
+    scope_hints:
+      code_roots: []
+      test_roots: ["tools/demoswarm-runs-tools/tests/"]
+      doc_paths: []
+      allow_new_files_under: []
+    touches: ["tools/demoswarm-runs-tools/tests/cli_contract.rs"]
+    tests: ["@REQ-001", "@REQ-002", "@NFR-COMP-001"]
+    observability: []
+    estimate: S
+
+  - id: ST-005
+    title: "Update CLAUDE.md demoswarm CLI command table"
+    status: TODO
+    depends_on: ["ST-003"]
+    req_ids: []
+    nfr_ids: ["NFR-COMP-002"]
+    acceptance_criteria:
+      - "version command row added to demoswarm CLI table in CLAUDE.md"
+      - "Row describes purpose: Print version as JSON"
+      - "Table formatting is consistent with existing rows"
+    scope_hints:
+      code_roots: []
+      test_roots: []
+      doc_paths: ["CLAUDE.md"]
+      allow_new_files_under: []
+    touches: ["CLAUDE.md"]
+    tests: []
+    observability: []
+    estimate: S
+
+  - id: ST-006
+    title: "Optional: Update Python fallback for version parity"
+    status: TODO
+    depends_on: ["ST-003"]
+    req_ids: []
+    nfr_ids: []
+    acceptance_criteria:
+      - "runs_tools.py has version subcommand that outputs JSON"
+      - "JSON output matches Rust implementation schema (name, version fields)"
+      - "Fallback works when Rust binary is not available"
+    scope_hints:
+      code_roots: [".claude/skills/runs-derive/fallback/"]
+      test_roots: []
+      doc_paths: []
+      allow_new_files_under: []
+    touches: [".claude/skills/runs-derive/fallback/runs_tools.py"]
+    tests: []
+    observability: []
+    estimate: S
+
+  - id: ST-007
+    title: "Verify coexistence with --version flag"
+    status: TODO
+    depends_on: ["ST-003"]
+    req_ids: ["REQ-004"]
+    nfr_ids: []
+    acceptance_criteria:
+      - "demoswarm --version outputs human-readable text (unchanged)"
+      - "demoswarm version outputs JSON (new)"
+      - "Both commands work independently"
+    scope_hints:
+      code_roots: []
+      test_roots: []
+      doc_paths: []
+      allow_new_files_under: []
+    touches: []
+    tests: ["@REQ-004"]
+    observability: []
+    estimate: S

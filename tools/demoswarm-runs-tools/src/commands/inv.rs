@@ -7,8 +7,8 @@ use anyhow::Result;
 use clap::{Args, Subcommand};
 use regex::Regex;
 
-use crate::output::{print_null, print_scalar};
 use super::common::CompatNullIfMissing;
+use crate::output::{print_null, print_scalar};
 
 #[derive(Args, Debug)]
 pub struct InvCommand {
@@ -67,7 +67,8 @@ fn extract_inventory_marker(file: &str, marker: &str) -> Result<()> {
 
     for line in content.lines() {
         if let Some(caps) = regex.captures(line)
-            && let Some(value) = caps.get(1) {
+            && let Some(value) = caps.get(1)
+        {
             print_scalar(value.as_str().trim());
             return Ok(());
         }

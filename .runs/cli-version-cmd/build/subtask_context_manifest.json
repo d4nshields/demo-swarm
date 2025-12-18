@@ -1,0 +1,191 @@
+{
+  "manifest_version": 2,
+  "run_id": "cli-version-cmd",
+  "generated_at": null,
+
+  "machine_summary": {
+    "status": "VERIFIED",
+    "recommended_action": "PROCEED",
+    "route_to_flow": null,
+    "route_to_agent": null,
+    "blockers": [],
+    "missing_required": [],
+    "concerns": [
+      "JSON output represents first structured output from demoswarm CLI (documented exception per ADR)"
+    ]
+  },
+
+  "subtask": {
+    "selector": "auto",
+    "resolution_source": "subtask_index_auto",
+    "id": "ST-001",
+    "title": "Create version.rs command module with VersionInfo struct",
+    "status": "TODO",
+    "scope_summary": "Create new version.rs module implementing the version subcommand with typed JSON output. The module follows the existing time.rs pattern: a VersionInfo struct with Serialize derive, a VersionCommand struct, and a run() function that serializes the struct to pretty-printed JSON.",
+    "acceptance_criteria": [
+      "File exists at tools/demoswarm-runs-tools/src/commands/version.rs",
+      "VersionInfo struct has name field (String) and version field (String)",
+      "Struct derives Serialize from serde",
+      "run() function accepts VersionCommand and returns anyhow::Result<()>",
+      "Version sourced from env!(\"CARGO_PKG_VERSION\") at compile time",
+      "JSON output via serde_json::to_string_pretty()",
+      "Output printed to stdout (not using print_scalar, which is for scalars)"
+    ],
+    "depends_on": [],
+    "touches": [
+      "tools/demoswarm-runs-tools/src/commands/version.rs"
+    ],
+    "planned_tests": [],
+    "planned_observability": [],
+    "estimate": "S"
+  },
+
+  "requirements": {
+    "req_ids": ["REQ-002", "REQ-003", "REQ-005"],
+    "nfr_ids": ["NFR-PERF-001", "NFR-REL-001"]
+  },
+
+  "inputs_read": [
+    ".runs/cli-version-cmd/plan/subtasks.yaml",
+    ".runs/cli-version-cmd/plan/work_plan.md",
+    ".runs/cli-version-cmd/plan/adr.md",
+    ".runs/cli-version-cmd/plan/api_contracts.yaml",
+    ".runs/cli-version-cmd/plan/impact_map.json",
+    ".runs/cli-version-cmd/plan/test_plan.md",
+    ".runs/cli-version-cmd/signal/requirements.md",
+    "tools/demoswarm-runs-tools/src/commands/time.rs",
+    "tools/demoswarm-runs-tools/src/commands/mod.rs",
+    "tools/demoswarm-runs-tools/src/main.rs",
+    "tools/demoswarm-runs-tools/tests/cli_contract.rs",
+    "tools/demoswarm-runs-tools/Cargo.toml",
+    ".claude/skills/runs-derive/fallback/runs_tools.py",
+    "CLAUDE.md"
+  ],
+
+  "paths": {
+    "specs": [
+      ".runs/cli-version-cmd/plan/adr.md",
+      ".runs/cli-version-cmd/plan/work_plan.md",
+      ".runs/cli-version-cmd/plan/subtasks.yaml",
+      ".runs/cli-version-cmd/plan/api_contracts.yaml",
+      ".runs/cli-version-cmd/plan/test_plan.md",
+      ".runs/cli-version-cmd/signal/requirements.md"
+    ],
+    "code": [
+      "tools/demoswarm-runs-tools/src/commands/time.rs",
+      "tools/demoswarm-runs-tools/src/commands/mod.rs",
+      "tools/demoswarm-runs-tools/src/main.rs",
+      "tools/demoswarm-runs-tools/Cargo.toml"
+    ],
+    "tests": [
+      "tools/demoswarm-runs-tools/tests/cli_contract.rs"
+    ],
+    "docs": [
+      "CLAUDE.md"
+    ],
+    "allow_new_files_under": [
+      "tools/demoswarm-runs-tools/src/commands/"
+    ]
+  },
+
+  "unresolved_patterns": [],
+
+  "rationale": [
+    {
+      "path": ".runs/cli-version-cmd/plan/adr.md",
+      "type": "spec",
+      "reason": "ADR defines decision to use OPT-001 (Standalone Module with Typed Struct) and documents the implementation approach",
+      "signals": ["OPT-001", "VersionInfo", "Serialize", "serde_json::to_string_pretty"],
+      "req_refs": ["REQ-002", "REQ-003", "REQ-005"],
+      "source": "subtask_index"
+    },
+    {
+      "path": ".runs/cli-version-cmd/plan/work_plan.md",
+      "type": "spec",
+      "reason": "Contains complete subtask breakdown with acceptance criteria and scope hints",
+      "signals": ["ST-001", "version.rs", "VersionInfo"],
+      "req_refs": ["REQ-002", "REQ-003", "REQ-005"],
+      "source": "subtask_index"
+    },
+    {
+      "path": ".runs/cli-version-cmd/plan/subtasks.yaml",
+      "type": "spec",
+      "reason": "Machine-canonical subtask index used for selection (ST-001 is first TODO with no dependencies)",
+      "signals": ["ST-001", "status: TODO", "depends_on: []"],
+      "req_refs": ["REQ-002", "REQ-003", "REQ-005"],
+      "source": "subtask_index"
+    },
+    {
+      "path": ".runs/cli-version-cmd/plan/api_contracts.yaml",
+      "type": "spec",
+      "reason": "Defines CLI subcommand contract including JSON output schema (VersionInfo), exit codes, and error handling",
+      "signals": ["VersionInfo", "name", "version", "exit_codes"],
+      "req_refs": ["REQ-002", "REQ-003"],
+      "source": "subtask_index"
+    },
+    {
+      "path": ".runs/cli-version-cmd/plan/test_plan.md",
+      "type": "spec",
+      "reason": "Defines test strategy and expected tests for version subcommand",
+      "signals": ["version_subcommand_outputs_valid_json", "cli_contract.rs"],
+      "req_refs": ["REQ-001", "REQ-002", "REQ-003", "REQ-004"],
+      "source": "subtask_index"
+    },
+    {
+      "path": ".runs/cli-version-cmd/signal/requirements.md",
+      "type": "spec",
+      "reason": "Source requirements including JSON output schema (REQ-002), version source (REQ-003), and integration pattern (REQ-005)",
+      "signals": ["REQ-002", "REQ-003", "REQ-005", "VersionInfo", "JSON"],
+      "req_refs": ["REQ-002", "REQ-003", "REQ-005"],
+      "source": "subtask_index"
+    },
+    {
+      "path": "tools/demoswarm-runs-tools/src/commands/time.rs",
+      "type": "code",
+      "reason": "Template file: REQ-005 AC-3 requires 'minimal subcommand pattern comparable to time.rs'. This is the pattern to follow for module structure",
+      "signals": ["TimeCommand", "TimeSubcommand", "run()", "Args", "Subcommand"],
+      "req_refs": ["REQ-005"],
+      "source": "subtask_index"
+    },
+    {
+      "path": "tools/demoswarm-runs-tools/src/commands/mod.rs",
+      "type": "code",
+      "reason": "Contains Command enum where Version variant must be added (ST-002 dependency). Shows existing module declarations and enum structure",
+      "signals": ["Command", "pub mod time", "Time(time::TimeCommand)"],
+      "req_refs": ["REQ-005"],
+      "source": "dependency"
+    },
+    {
+      "path": "tools/demoswarm-runs-tools/src/main.rs",
+      "type": "code",
+      "reason": "Contains execute_command() function where dispatch arm must be added (ST-003 dependency). Shows existing dispatch pattern",
+      "signals": ["execute_command", "Command::Time(sub) => commands::time::run(sub)"],
+      "req_refs": ["REQ-001", "REQ-005"],
+      "source": "dependency"
+    },
+    {
+      "path": "tools/demoswarm-runs-tools/Cargo.toml",
+      "type": "code",
+      "reason": "Source of truth for version string. env!(\"CARGO_PKG_VERSION\") reads version = \"1.0.1\" from this file at compile time",
+      "signals": ["version = \"1.0.1\"", "CARGO_PKG_VERSION"],
+      "req_refs": ["REQ-003"],
+      "source": "subtask_index"
+    },
+    {
+      "path": "tools/demoswarm-runs-tools/tests/cli_contract.rs",
+      "type": "test",
+      "reason": "Integration test file where version subcommand tests will be added (ST-004). Shows existing test patterns using assert_cmd",
+      "signals": ["demoswarm()", "assert_cmd", "cargo_bin_cmd"],
+      "req_refs": ["REQ-001", "REQ-002"],
+      "source": "subtask_index"
+    },
+    {
+      "path": "CLAUDE.md",
+      "type": "doc",
+      "reason": "Documentation file where version command must be added to CLI table (ST-005). Shows existing table format at line ~487",
+      "signals": ["| Command | Purpose |", "demoswarm"],
+      "req_refs": [],
+      "source": "subtask_index"
+    }
+  ]
+}
