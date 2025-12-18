@@ -6,69 +6,65 @@ default_branch: main
 
 verification:
   ci_workflows: PASS
-  branch_protection: UNKNOWN
+  branch_protection: FAIL
   runtime_verification: PASS
   pre_commit: N/A
   documentation: PASS
 
 failed_checks:
   - check: branch_protection
-    status: UNKNOWN
-    reason: "Cannot verify branch protection; push permission denied (403) prevents API access; no manual snapshot at deploy/branch_protection.md"
+    status: FAIL
+    reason: "GitHub API reports 'Branch not protected' (HTTP 404); no required status checks configured on main"
 
 recommended_actions:
-  - "Resolve authentication: danshieldspala lacks push access to d4nshields/demo-swarm.git"
-  - "After push access restored: git push origin run/cli-version-cmd"
-  - "Re-run Flow 5 deploy operations to complete merge to mainline"
-  - "Optionally: create deploy/branch_protection.md snapshot if API access remains unavailable"
+  - "Enable branch protection on main via GitHub Settings -> Branches -> Add rule"
+  - "Configure required status checks to include: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift"
+  - "Re-run deploy-decider after protection is enabled to achieve STABLE verdict"
 ```
 
 # Deployment Decision
 
 ## Evidence
 
-* Gate: `.runs/cli-version-cmd/gate/merge_decision.md` - verdict MERGE, status VERIFIED
-* CI workflows: `.github/workflows/pack.yml` (5 jobs: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift)
-* Branch protection: UNKNOWN (no API access due to 403 permission denied; no manual snapshot)
-* Runtime verification: `.runs/cli-version-cmd/deploy/verification_report.md` (smoke_signal: STABLE, 14/14 tests pass)
+* Gate: `.runs/cli-version-cmd/gate/merge_decision.md` (verdict: MERGE, status: VERIFIED, recommended_action: PROCEED)
+* CI workflows: `.github/workflows/pack.yml` (jobs: lint, pack-check, demoswarm-smoke, runs-tools-tests, doc-drift)
+* Branch protection: `gh api repos/d4nshields/demo-swarm/branches/main/protection` returned HTTP 404 "Branch not protected"
+* Runtime verification: `.runs/cli-version-cmd/deploy/verification_report.md` (status: VERIFIED, smoke_signal: STABLE)
+* Default branch: main (from `git symbolic-ref refs/remotes/origin/HEAD`)
 
 ## Rationale
 
-Gate verdict is MERGE with VERIFIED status. The merge-decider explicitly accepted RSK-006 (coverage tooling limitation) as an environment gap, not a code quality issue. All functional requirements are implemented, all tests pass, and critics approved the implementation.
+Gate verdict is MERGE with VERIFIED status and PROCEED recommendation. All gate checks passed except coverage tooling (risk-accepted per RSK-006).
 
-CI workflow presence is PASS: `.github/workflows/pack.yml` contains explicit test steps including `cargo test --manifest-path tools/demoswarm-runs-tools/Cargo.toml` in the `runs-tools-tests` job.
+CI workflows are properly configured. The repository has `.github/workflows/pack.yml` with five jobs:
+- `lint`: runs Python scripts for portable claude checks and frontmatter linting
+- `pack-check`: runs `bash .claude/scripts/pack-check.sh`
+- `demoswarm-smoke`: installs CLI and runs smoke tests
+- `runs-tools-tests`: runs `cargo test` on the runs-tools crate
+- `doc-drift`: checks for documentation drift
 
-Branch protection verification is UNKNOWN: the authentication context (`danshieldspala`) lacks push access to the remote repository (`d4nshields/demo-swarm.git`), returning 403 on push attempts. This same permission issue prevents API-based branch protection verification. No manual snapshot exists at `.runs/cli-version-cmd/deploy/branch_protection.md`.
+Runtime verification passed: merge completed successfully (SHA 7268525783656c81c236658e6c1aa3a396147b65), release published (tag cli-version-cmd-v1), smoke signal is STABLE, 14/14 tests pass.
 
-Runtime verification is PASS (tighten-only applies): the smoke verification section confirms `smoke_signal: STABLE` with 14/14 tests passing and the `demoswarm version` subcommand executing correctly with valid JSON output.
+However, branch protection is not enabled on main. The GitHub API explicitly returns "Branch not protected" (HTTP 404). This means:
+- PRs can be merged without passing CI checks
+- Force pushes to main are not blocked
+- Required reviewers are not enforced
 
-Documentation is PASS: `CONTRIBUTING.md` contains clear dev/CI instructions including validation commands.
+Without branch protection, governance is not enforced at the GitHub level. The merge that occurred (PR #1) succeeded because no protection rules blocked it, not because protection rules were satisfied. This is a distinction that matters for governance verification.
 
-**Verdict rationale**: Because `branch_protection` is UNKNOWN (a critical check), the deployment verdict must be NOT_DEPLOYED per the decision rules. This is not a code quality failure - the implementation is complete, tested, and gate-approved. The blocker is purely authentication/permission scope preventing both push operations and branch protection verification.
-
-**Implementation readiness**: The 6 local commits on `run/cli-version-cmd` are ready to push. Once push access is restored:
-1. Push commits to remote
-2. Re-run Flow 5 to complete PR creation, merge, tag, and release operations
+The verdict is NOT_DEPLOYED because branch protection (a critical check) is FAIL. The recommended action is BOUNCE to enable branch protection, which is a repo-owned configuration change that does not require code changes.
 
 ## Machine Summary
 
 ```yaml
-status: UNVERIFIED
-recommended_action: ESCALATE
-route_to_flow: null
+status: VERIFIED
+recommended_action: BOUNCE
+route_to_flow: 3
 route_to_agent: null
 blockers:
-  - branch_protection verification is UNKNOWN (critical check)
-  - push permission denied prevents remote operations
-missing_required:
-  - Push credentials with write access to d4nshields/demo-swarm.git
+  - "branch_protection: FAIL - no required status checks configured on main"
+missing_required: []
 concerns:
-  - 6 local commits on run/cli-version-cmd remain unpushed
-  - No PR was created; no merge to mainline occurred
-  - Gate verdict MERGE could not be executed due to auth barrier
-notes:
-  - Gate verdict: MERGE (VERIFIED)
-  - Local smoke verification: STABLE (14/14 tests pass)
-  - Implementation is complete and functionally correct
-  - Authentication is the sole blocker to remote deployment
+  - "Merge succeeded without governance enforcement - protection should be enabled before future merges"
+  - "CI workflows exist but are not enforced via required status checks"
 ```

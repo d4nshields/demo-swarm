@@ -4,21 +4,20 @@
   "flow": "deploy",
 
   "status": "UNVERIFIED",
-  "recommended_action": "ESCALATE",
-  "route_to_flow": null,
+  "recommended_action": "BOUNCE",
+  "route_to_flow": 3,
   "route_to_agent": null,
 
   "missing_required": [],
-  "missing_optional": ["flow_plan.md"],
+  "missing_optional": [
+    "flow_plan.md"
+  ],
   "blockers": [
-    "deployment_verdict is NOT_DEPLOYED (push permission denied prevents remote operations)",
-    "branch_protection verification is UNKNOWN (critical check)",
-    "push permission denied prevents remote operations"
+    "branch_protection: FAIL - no required status checks configured on main"
   ],
   "concerns": [
-    "6 local commits on run/cli-version-cmd remain unpushed",
-    "No PR was created; no merge to mainline occurred",
-    "Gate verdict MERGE could not be executed due to auth barrier"
+    "Merge succeeded without governance enforcement - protection should be enabled before future merges",
+    "CI workflows exist but are not enforced via required status checks"
   ],
 
   "deployment_verdict": "NOT_DEPLOYED",
@@ -26,21 +25,35 @@
 
   "counts": {
     "failed_checks": 1,
-    "ci_checks_total": 0,
-    "deploy_events_total": 0,
-    "verification_checks_total": 0
+    "ci_checks_total": 1,
+    "deploy_events_total": 1,
+    "verification_checks_total": 2
   },
 
   "signals": {
     "ci_signal": "N/A",
-    "deploy_signal": "FAIL",
-    "not_deployed": "yes"
+    "deploy_signal": "N/A",
+    "not_deployed": "no"
   },
 
   "quality_gates": {
-    "deploy_decider": "UNVERIFIED",
-    "verification_report": "UNVERIFIED"
+    "deploy_decider": "VERIFIED",
+    "verification_report": "VERIFIED"
   },
+
+  "merge_details": {
+    "merge_completed": true,
+    "pr_number": 1,
+    "merge_sha": "7268525783656c81c236658e6c1aa3a396147b65"
+  },
+
+  "release_details": {
+    "release_created": true,
+    "tag": "cli-version-cmd-v1",
+    "release_url": "https://github.com/d4nshields/demo-swarm/releases/tag/cli-version-cmd-v1"
+  },
+
+  "smoke_signal": "STABLE",
 
   "key_artifacts": [
     "deployment_decision.md",
@@ -49,5 +62,5 @@
   ],
 
   "github_reporting": "PENDING",
-  "completed_at": "2025-12-17T20:08:58Z"
+  "completed_at": "2025-12-18T00:58:15Z"
 }

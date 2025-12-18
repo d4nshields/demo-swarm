@@ -3,9 +3,9 @@
 ## Status: CLEAN
 
 ## Scope
-- Allowlist scanned: `.runs/cli-version-cmd/deploy/`, `.runs/cli-version-cmd/run_meta.json`, `.runs/index.json`
+- Allowlist scanned: `.runs/cli-version-cmd/deploy/` (12 files), `.runs/cli-version-cmd/run_meta.json`, `.runs/index.json`
 - Staged files scanned: 0
-- Notes: No staged files present
+- Notes: No staged files present; total allowlist files scanned: 14
 
 ## Findings (redacted)
 | # | Type | File | Line | Action |
