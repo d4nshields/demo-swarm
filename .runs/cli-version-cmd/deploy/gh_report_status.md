@@ -2,7 +2,7 @@
 
 ## Posting
 posting_status: POSTED
-reason: null
+reason: Updated existing deploy comment with final STABLE verdict
 
 ## Target
 type: issue
@@ -12,13 +12,21 @@ repository: EffortlessMetrics/demo-swarm
 ## Comment
 comment_id: 3667359245
 comment_url: https://github.com/EffortlessMetrics/demo-swarm/issues/1#issuecomment-3667359245
+updated_at: 2025-12-18T02:20:02Z
 
 ## Content Posted
-Flow 5 (Deploy) summary including gate verdict (MERGE), deployment verdict (NOT_DEPLOYED), smoke signal (STABLE), branch status, and key artifacts. Comment includes idempotency marker for future updates.
+Updated Flow 5 (Deploy) summary reflecting final deployment status:
+- Verdict changed from NOT_DEPLOYED to STABLE
+- PR #1 merged with SHA 7268525
+- Release cli-version-cmd-v1 published
+- Branch protection enabled
+- Governance now verifiable
+- Run marked as complete (all 6 flows executed)
 
 ## Verification
 - [x] Comment visible on GitHub
 - [x] Links resolve correctly
+- [x] Idempotency marker present
 
 ## Machine Summary
 status: VERIFIED

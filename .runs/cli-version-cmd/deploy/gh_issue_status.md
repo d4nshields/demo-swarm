@@ -21,16 +21,16 @@ concerns: []
 ## Gates (Control Plane)
 - safe_to_publish: true
 - proceed_to_github_ops: true
-- commit_sha: 449df509880bf0bb6c351197a29be7bdc6ea9cda
+- commit_sha: 28dfd5913e9bd6564802f75796eed7d43b7990f8
 
 ## Metadata Updated
-- run_meta.json: no (already correct)
-- index.json: no (already correct)
-- aliases_updated: no (already correct)
+- run_meta.json: no (already current)
+- index.json: no (already current)
+- aliases_updated: no (already current)
 
 ## Notes
-- Issue #1 status board updated with all flow statuses (Signal, Plan, Build, Gate, Deploy)
-- Receipt links use commit SHA 449df509880bf0bb6c351197a29be7bdc6ea9cda for stability
-- Signal/Plan/Build show VERIFIED; Gate/Deploy show UNVERIFIED; Wisdom pending
-- run_meta.json already had correct issue_number=1, canonical_key=gh-1, github_repo=EffortlessMetrics/demo-swarm
-- index.json already had correct entry for cli-version-cmd run
+- Updated status board between markers with all six flow statuses
+- Deploy status updated to VERIFIED (STABLE) per deploy_receipt.json
+- Wisdom status updated to VERIFIED per wisdom_receipt.json
+- Receipt links updated to current commit SHA
+- All flows now complete: Signal/Plan/Build/Deploy/Wisdom VERIFIED; Gate UNVERIFIED (coverage tooling unavailable)
