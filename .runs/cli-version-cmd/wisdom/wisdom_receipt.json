@@ -1,0 +1,38 @@
+{
+  "run_id": "cli-version-cmd",
+  "flow": "wisdom",
+
+  "status": "VERIFIED",
+  "recommended_action": "PROCEED",
+  "route_to_flow": null,
+  "route_to_agent": null,
+
+  "missing_required": [],
+  "missing_optional": [],
+  "blockers": [],
+
+  "counts": {
+    "learnings_extracted": 3,
+    "feedback_actions_created": 3,
+    "regressions_found": 0,
+    "flows_completed": 5,
+    "followup_issue_drafts": 3
+  },
+
+  "flow_summary": {
+    "signal": "VERIFIED",
+    "plan": "VERIFIED",
+    "build": "VERIFIED",
+    "gate": "UNVERIFIED",
+    "deploy": "UNVERIFIED"
+  },
+
+  "final_outcomes": {
+    "merge_decision": "MERGE",
+    "deployment_verdict": "NOT_DEPLOYED"
+  },
+
+  "github_reporting": "PENDING",
+  "completed_at": "2025-12-18T01:39:22Z",
+  "run_complete": true
+}

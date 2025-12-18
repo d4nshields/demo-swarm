@@ -1,0 +1,780 @@
+{
+  "schema_version": 1,
+  "run_id": "cli-version-cmd",
+  "generated_at": "2025-12-17T20:35:00Z",
+  "machine_summary": {
+    "status": "VERIFIED",
+    "recommended_action": "PROCEED",
+    "route_to_flow": null,
+    "route_to_agent": null,
+    "blockers": [],
+    "missing_required": [],
+    "concerns": [
+      "wisdom_receipt.json does not exist (wisdom flow may be in progress)",
+      "Some timestamps derived from file content; file modification times not used"
+    ]
+  },
+  "sources": [
+    ".runs/cli-version-cmd/run_meta.json",
+    ".runs/index.json",
+    ".runs/cli-version-cmd/signal/signal_receipt.json",
+    ".runs/cli-version-cmd/signal/secrets_status.json",
+    ".runs/cli-version-cmd/signal/gh_issue_status.md",
+    ".runs/cli-version-cmd/signal/gh_report_status.md",
+    ".runs/cli-version-cmd/plan/plan_receipt.json",
+    ".runs/cli-version-cmd/plan/adr.md",
+    ".runs/cli-version-cmd/plan/secrets_status.json",
+    ".runs/cli-version-cmd/plan/git_status.md",
+    ".runs/cli-version-cmd/build/build_receipt.json",
+    ".runs/cli-version-cmd/build/secrets_status.json",
+    ".runs/cli-version-cmd/gate/gate_receipt.json",
+    ".runs/cli-version-cmd/gate/merge_decision.md",
+    ".runs/cli-version-cmd/gate/secrets_status.json",
+    ".runs/cli-version-cmd/gate/git_status.md",
+    ".runs/cli-version-cmd/deploy/deploy_receipt.json",
+    ".runs/cli-version-cmd/deploy/deployment_decision.md",
+    ".runs/cli-version-cmd/deploy/deployment_log.md",
+    ".runs/cli-version-cmd/deploy/verification_report.md",
+    ".runs/cli-version-cmd/deploy/secrets_status.json",
+    ".runs/cli-version-cmd/deploy/git_status.md",
+    ".runs/cli-version-cmd/deploy/gh_issue_status.md",
+    ".runs/cli-version-cmd/deploy/gh_report_status.md",
+    ".runs/cli-version-cmd/wisdom/flow_plan.md",
+    ".runs/cli-version-cmd/wisdom/artifact_audit.md",
+    ".runs/cli-version-cmd/wisdom/regression_report.md"
+  ],
+  "flows": {
+    "signal": {
+      "status": "VERIFIED",
+      "recommended_action": "PROCEED",
+      "completed_at": "2025-12-17T17:23:25Z",
+      "receipt_exists": true,
+      "key_artifacts": [
+        "requirements.md",
+        "features/*.feature",
+        "open_questions.md",
+        "early_risks.md",
+        "risk_assessment.md"
+      ],
+      "counts": {
+        "functional_requirements": 5,
+        "non_functional_requirements": 5,
+        "bdd_scenarios": 16,
+        "open_questions": 4,
+        "risks": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 4
+        }
+      },
+      "quality_gates": {
+        "requirements_critic": "VERIFIED",
+        "bdd_critic": "VERIFIED"
+      },
+      "github_activity": {
+        "issue_created": true,
+        "issue_number": 1,
+        "canonical_key": "gh-1",
+        "report_posted": true,
+        "comment_id": 3666415176
+      }
+    },
+    "plan": {
+      "status": "VERIFIED",
+      "recommended_action": "PROCEED",
+      "completed_at": "2025-12-17T18:08:07Z",
+      "receipt_exists": true,
+      "key_artifacts": [
+        "design_options.md",
+        "adr.md",
+        "design_validation.md",
+        "test_plan.md",
+        "work_plan.md",
+        "policy_analysis.md",
+        "impact_map.json"
+      ],
+      "decision_spine": {
+        "chosen_option": "OPT-001",
+        "option_title": "Standalone Module with Typed Struct",
+        "drivers_total": 4,
+        "alternatives_rejected": ["OPT-002", "OPT-003"]
+      },
+      "counts": {
+        "design_options": 3,
+        "subtasks_total": 7,
+        "open_questions": 5
+      },
+      "quality_gates": {
+        "design_critic": "VERIFIED",
+        "policy_analyst": "VERIFIED"
+      }
+    },
+    "build": {
+      "status": "VERIFIED",
+      "recommended_action": "PROCEED",
+      "completed_at": "2025-12-17T19:08:00Z",
+      "receipt_exists": true,
+      "key_artifacts": [
+        "self_review.md",
+        "test_changes_summary.md",
+        "impl_changes_summary.md",
+        "test_execution.md",
+        "test_critique.md",
+        "code_critique.md",
+        "mutation_report.md",
+        "doc_updates.md"
+      ],
+      "tests": {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "summary": "passed=14 failed=0 skipped=0"
+      },
+      "counts": {
+        "tests_written": 1,
+        "files_changed": 3,
+        "open_questions": 5
+      },
+      "quality_gates": {
+        "test_critic": "VERIFIED",
+        "code_critic": "VERIFIED",
+        "self_reviewer": "VERIFIED"
+      }
+    },
+    "gate": {
+      "status": "UNVERIFIED",
+      "recommended_action": "ESCALATE",
+      "completed_at": "2025-12-17T19:46:44Z",
+      "receipt_exists": true,
+      "key_artifacts": [
+        "merge_decision.md",
+        "receipt_audit.md",
+        "contract_compliance.md",
+        "security_scan.md",
+        "coverage_audit.md",
+        "policy_analysis.md",
+        "risk_assessment.md"
+      ],
+      "merge_verdict": "MERGE",
+      "blockers": [
+        "coverage_audit status is UNVERIFIED (coverage tooling not available; RSK-006 ACCEPTED)"
+      ],
+      "counts": {
+        "contract_violations": 0,
+        "security_findings": 0,
+        "policy_violations": 0
+      },
+      "quality_gates": {
+        "merge_decider": "VERIFIED",
+        "receipt_audit": "VERIFIED",
+        "contract_compliance": "VERIFIED",
+        "security_scan": "VERIFIED",
+        "coverage_audit": "UNVERIFIED"
+      },
+      "risk_acceptance": {
+        "RSK-006": {
+          "description": "Coverage tooling limitation",
+          "status": "ACCEPTED",
+          "rationale": "Environment gap, not code quality issue"
+        }
+      }
+    },
+    "deploy": {
+      "status": "UNVERIFIED",
+      "recommended_action": "BOUNCE",
+      "route_to_flow": 3,
+      "completed_at": "2025-12-18T00:58:15Z",
+      "receipt_exists": true,
+      "key_artifacts": [
+        "deployment_decision.md",
+        "deployment_log.md",
+        "verification_report.md"
+      ],
+      "deployment_verdict": "NOT_DEPLOYED",
+      "gate_verdict": "MERGE",
+      "smoke_signal": "STABLE",
+      "blockers": [
+        "branch_protection: FAIL - no required status checks configured on main"
+      ],
+      "merge_details": {
+        "merge_completed": true,
+        "pr_number": 1,
+        "merge_sha": "7268525783656c81c236658e6c1aa3a396147b65",
+        "merged_at": "2025-12-18T00:52:24Z"
+      },
+      "release_details": {
+        "release_created": true,
+        "tag": "cli-version-cmd-v1",
+        "release_url": "https://github.com/d4nshields/demo-swarm/releases/tag/cli-version-cmd-v1",
+        "published_at": "2025-12-18T00:52:50Z"
+      },
+      "quality_gates": {
+        "deploy_decider": "VERIFIED",
+        "verification_report": "VERIFIED"
+      },
+      "github_activity": {
+        "issue_updated": true,
+        "issue_number": 1,
+        "report_posted": true,
+        "comment_id": 3667359245
+      }
+    },
+    "wisdom": {
+      "status": "IN_PROGRESS",
+      "recommended_action": null,
+      "completed_at": null,
+      "receipt_exists": false,
+      "key_artifacts": [
+        "flow_plan.md",
+        "artifact_audit.md",
+        "regression_report.md"
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": "signal/flow_observed/init",
+      "t": "2025-12-17T17:06:51Z",
+      "t_source": "content_timestamp",
+      "flow": "signal",
+      "type": "flow_observed",
+      "artifacts": [".runs/cli-version-cmd/run_meta.json"],
+      "commit_sha": null,
+      "details": {
+        "run_created": true,
+        "task_title": "Add demoswarm version CLI subcommand"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/run_meta.json",
+        "pointer": "created_at"
+      }
+    },
+    {
+      "id": "signal/receipt_written/signal_receipt",
+      "t": "2025-12-17T17:23:25Z",
+      "t_source": "content_timestamp",
+      "flow": "signal",
+      "type": "receipt_written",
+      "artifacts": [".runs/cli-version-cmd/signal/signal_receipt.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "VERIFIED",
+        "functional_requirements": 5,
+        "bdd_scenarios": 16
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/signal/signal_receipt.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "signal/secrets_gated/signal",
+      "t": "2025-12-17T17:25:22Z",
+      "t_source": "content_timestamp",
+      "flow": "signal",
+      "type": "secrets_gated",
+      "artifacts": [".runs/cli-version-cmd/signal/secrets_status.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "CLEAN",
+        "safe_to_commit": true,
+        "safe_to_publish": true,
+        "total_findings": 0
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/signal/secrets_status.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "signal/gh_activity_recorded/issue_created",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "signal",
+      "type": "gh_activity_recorded",
+      "artifacts": [".runs/cli-version-cmd/signal/gh_issue_status.md"],
+      "commit_sha": "ec0070d4c68ee363a2ad98b75e17bc821ea398a8",
+      "details": {
+        "operation_status": "CREATED",
+        "issue_number": 1,
+        "canonical_key": "gh-1",
+        "url": "https://github.com/EffortlessMetrics/demo-swarm/issues/1"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/signal/gh_issue_status.md",
+        "pointer": "Issue"
+      }
+    },
+    {
+      "id": "signal/gh_activity_recorded/report_posted",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "signal",
+      "type": "gh_activity_recorded",
+      "artifacts": [".runs/cli-version-cmd/signal/gh_report_status.md"],
+      "commit_sha": null,
+      "details": {
+        "posting_status": "POSTED",
+        "comment_id": 3666415176,
+        "issue_number": 1
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/signal/gh_report_status.md",
+        "pointer": "Comment"
+      }
+    },
+    {
+      "id": "plan/receipt_written/plan_receipt",
+      "t": "2025-12-17T18:08:07Z",
+      "t_source": "content_timestamp",
+      "flow": "plan",
+      "type": "receipt_written",
+      "artifacts": [".runs/cli-version-cmd/plan/plan_receipt.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "VERIFIED",
+        "design_options": 3,
+        "subtasks_total": 7
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/plan/plan_receipt.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "plan/decision_recorded/adr",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "plan",
+      "type": "decision_recorded",
+      "artifacts": [".runs/cli-version-cmd/plan/adr.md"],
+      "commit_sha": null,
+      "details": {
+        "chosen_option": "OPT-001",
+        "option_title": "Standalone Module with Typed Struct",
+        "drivers_total": 4,
+        "alternatives_rejected": ["OPT-002", "OPT-003"],
+        "risks_documented": ["RSK-001", "RSK-002", "RSK-003", "RSK-004"],
+        "assumptions": ["ASM-001", "ASM-002", "ASM-003", "ASM-004", "ASM-005", "ASM-006"]
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/plan/adr.md",
+        "pointer": "Inventory (machine countable)"
+      }
+    },
+    {
+      "id": "plan/secrets_gated/plan",
+      "t": "2025-12-17T18:10:00Z",
+      "t_source": "content_timestamp",
+      "flow": "plan",
+      "type": "secrets_gated",
+      "artifacts": [".runs/cli-version-cmd/plan/secrets_status.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "CLEAN",
+        "safe_to_commit": true,
+        "safe_to_publish": true
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/plan/secrets_status.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "plan/repo_checkpointed/plan",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "plan",
+      "type": "repo_checkpointed",
+      "artifacts": [".runs/cli-version-cmd/plan/git_status.md"],
+      "commit_sha": "ec0dd57f61c6b082291a2167ca6cc000f1cf73b0",
+      "details": {
+        "operation": "checkpoint",
+        "status": "COMPLETED_WITH_ANOMALY",
+        "proceed_to_github_ops": false,
+        "anomaly_paths": [
+          ".runs/cli-version-cmd/signal/gh_comment_id.txt",
+          ".runs/cli-version-cmd/signal/gh_issue_status.md",
+          ".runs/cli-version-cmd/signal/gh_report_status.md",
+          ".runs/cli-version-cmd/signal/github_report.md"
+        ]
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/plan/git_status.md",
+        "pointer": "After"
+      }
+    },
+    {
+      "id": "build/receipt_written/build_receipt",
+      "t": "2025-12-17T19:08:00Z",
+      "t_source": "content_timestamp",
+      "flow": "build",
+      "type": "receipt_written",
+      "artifacts": [".runs/cli-version-cmd/build/build_receipt.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "VERIFIED",
+        "tests_passed": 14,
+        "tests_failed": 0,
+        "files_changed": 3
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/build/build_receipt.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "build/secrets_gated/build",
+      "t": "2025-12-17T19:12:05Z",
+      "t_source": "content_timestamp",
+      "flow": "build",
+      "type": "secrets_gated",
+      "artifacts": [".runs/cli-version-cmd/build/secrets_status.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "CLEAN",
+        "safe_to_commit": true,
+        "safe_to_publish": true,
+        "staged_files_scanned": 14
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/build/secrets_status.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "gate/receipt_written/gate_receipt",
+      "t": "2025-12-17T19:46:44Z",
+      "t_source": "content_timestamp",
+      "flow": "gate",
+      "type": "receipt_written",
+      "artifacts": [".runs/cli-version-cmd/gate/gate_receipt.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "UNVERIFIED",
+        "merge_verdict": "MERGE",
+        "coverage_audit": "UNVERIFIED",
+        "risk_accepted": "RSK-006"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/gate/gate_receipt.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "gate/decision_recorded/merge_decision",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "gate",
+      "type": "decision_recorded",
+      "artifacts": [".runs/cli-version-cmd/gate/merge_decision.md"],
+      "commit_sha": null,
+      "details": {
+        "verdict": "MERGE",
+        "evidence_summary": {
+          "receipt_audit": "PASS",
+          "contract_compliance": "PASS",
+          "security_scan": "PASS",
+          "coverage_audit": "WARN (RSK-006 ACCEPTED)",
+          "policy_analysis": "PASS",
+          "risk_assessment": "PASS"
+        },
+        "rationale": "All gate checks except coverage VERIFIED; coverage gap is environment limitation, not code deficiency; RSK-006 formally risk-accepted"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/gate/merge_decision.md",
+        "pointer": "Evidence Summary"
+      }
+    },
+    {
+      "id": "gate/secrets_gated/gate",
+      "t": "2025-12-17T19:49:00Z",
+      "t_source": "content_timestamp",
+      "flow": "gate",
+      "type": "secrets_gated",
+      "artifacts": [".runs/cli-version-cmd/gate/secrets_status.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "CLEAN",
+        "safe_to_commit": true,
+        "safe_to_publish": true
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/gate/secrets_status.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "gate/repo_checkpointed/gate",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "gate",
+      "type": "repo_checkpointed",
+      "artifacts": [".runs/cli-version-cmd/gate/git_status.md"],
+      "commit_sha": "80cd961944140b98158a5f104bb3be6ebba26c74",
+      "details": {
+        "operation": "checkpoint",
+        "status": "FAILED",
+        "commit_succeeded_locally": true,
+        "push_failed": true,
+        "push_error": "Permission denied (403)"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/gate/git_status.md",
+        "pointer": "After"
+      }
+    },
+    {
+      "id": "deploy/artifact_observed/deployment_log",
+      "t": "2025-12-18T00:52:57Z",
+      "t_source": "content_timestamp",
+      "flow": "deploy",
+      "type": "artifact_observed",
+      "artifacts": [".runs/cli-version-cmd/deploy/deployment_log.md"],
+      "commit_sha": null,
+      "details": {
+        "operation": "merge_tag_release",
+        "status": "COMPLETED"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/deployment_log.md",
+        "pointer": "Timestamp"
+      }
+    },
+    {
+      "id": "deploy/artifact_observed/pr_merged",
+      "t": "2025-12-18T00:52:24Z",
+      "t_source": "content_timestamp",
+      "flow": "deploy",
+      "type": "artifact_observed",
+      "artifacts": [".runs/cli-version-cmd/deploy/deployment_log.md"],
+      "commit_sha": "7268525783656c81c236658e6c1aa3a396147b65",
+      "details": {
+        "pr_number": 1,
+        "pr_url": "https://github.com/d4nshields/demo-swarm/pull/1",
+        "merge_method": "merge commit",
+        "branch_deleted": true
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/deployment_log.md",
+        "pointer": "Merge Details"
+      }
+    },
+    {
+      "id": "deploy/artifact_observed/release_created",
+      "t": "2025-12-18T00:52:50Z",
+      "t_source": "content_timestamp",
+      "flow": "deploy",
+      "type": "artifact_observed",
+      "artifacts": [".runs/cli-version-cmd/deploy/verification_report.md"],
+      "commit_sha": "7268525783656c81c236658e6c1aa3a396147b65",
+      "details": {
+        "tag": "cli-version-cmd-v1",
+        "release_url": "https://github.com/d4nshields/demo-swarm/releases/tag/cli-version-cmd-v1",
+        "is_draft": false,
+        "is_prerelease": false
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/verification_report.md",
+        "pointer": "Release Verification Details"
+      }
+    },
+    {
+      "id": "deploy/decision_recorded/deployment_decision",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "deploy",
+      "type": "decision_recorded",
+      "artifacts": [".runs/cli-version-cmd/deploy/deployment_decision.md"],
+      "commit_sha": null,
+      "details": {
+        "deployment_verdict": "NOT_DEPLOYED",
+        "gate_verdict": "MERGE",
+        "ci_workflows": "PASS",
+        "branch_protection": "FAIL",
+        "runtime_verification": "PASS",
+        "rationale": "Branch protection not enabled on main; governance not enforced at GitHub level"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/deployment_decision.md",
+        "pointer": "failed_checks"
+      }
+    },
+    {
+      "id": "deploy/receipt_written/deploy_receipt",
+      "t": "2025-12-18T00:58:15Z",
+      "t_source": "content_timestamp",
+      "flow": "deploy",
+      "type": "receipt_written",
+      "artifacts": [".runs/cli-version-cmd/deploy/deploy_receipt.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "UNVERIFIED",
+        "deployment_verdict": "NOT_DEPLOYED",
+        "smoke_signal": "STABLE",
+        "merge_sha": "7268525783656c81c236658e6c1aa3a396147b65",
+        "tag": "cli-version-cmd-v1"
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/deploy_receipt.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "deploy/secrets_gated/deploy",
+      "t": "2025-12-18T01:02:26Z",
+      "t_source": "content_timestamp",
+      "flow": "deploy",
+      "type": "secrets_gated",
+      "artifacts": [".runs/cli-version-cmd/deploy/secrets_status.json"],
+      "commit_sha": null,
+      "details": {
+        "status": "CLEAN",
+        "safe_to_commit": true,
+        "safe_to_publish": true
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/secrets_status.json",
+        "pointer": "completed_at"
+      }
+    },
+    {
+      "id": "deploy/repo_checkpointed/deploy",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "deploy",
+      "type": "repo_checkpointed",
+      "artifacts": [".runs/cli-version-cmd/deploy/git_status.md"],
+      "commit_sha": "773bc8044ae8a4e65405d0d50c0913c8b5b67364",
+      "details": {
+        "operation": "checkpoint",
+        "status": "COMPLETED_WITH_ANOMALY",
+        "proceed_to_github_ops": false,
+        "anomaly_paths": [".runs/cli-version-cmd/gate/git_status.md"]
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/git_status.md",
+        "pointer": "After"
+      }
+    },
+    {
+      "id": "deploy/gh_activity_recorded/issue_updated",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "deploy",
+      "type": "gh_activity_recorded",
+      "artifacts": [".runs/cli-version-cmd/deploy/gh_issue_status.md"],
+      "commit_sha": "449df509880bf0bb6c351197a29be7bdc6ea9cda",
+      "details": {
+        "operation_status": "UPDATED",
+        "issue_number": 1,
+        "status_board_updated": true
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/gh_issue_status.md",
+        "pointer": "Notes"
+      }
+    },
+    {
+      "id": "deploy/gh_activity_recorded/report_posted",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "deploy",
+      "type": "gh_activity_recorded",
+      "artifacts": [".runs/cli-version-cmd/deploy/gh_report_status.md"],
+      "commit_sha": null,
+      "details": {
+        "posting_status": "POSTED",
+        "comment_id": 3667359245,
+        "issue_number": 1
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/deploy/gh_report_status.md",
+        "pointer": "Comment"
+      }
+    },
+    {
+      "id": "wisdom/flow_observed/in_progress",
+      "t": null,
+      "t_source": "unknown",
+      "flow": "wisdom",
+      "type": "flow_observed",
+      "artifacts": [
+        ".runs/cli-version-cmd/wisdom/flow_plan.md",
+        ".runs/cli-version-cmd/wisdom/artifact_audit.md",
+        ".runs/cli-version-cmd/wisdom/regression_report.md"
+      ],
+      "commit_sha": null,
+      "details": {
+        "receipt_exists": false,
+        "artifacts_present": ["flow_plan.md", "artifact_audit.md", "regression_report.md"]
+      },
+      "evidence": {
+        "artifact": ".runs/cli-version-cmd/wisdom/",
+        "pointer": "directory listing"
+      }
+    }
+  ],
+  "counts": {
+    "events_captured": 25,
+    "flows_documented": 6,
+    "missing_flows": 0
+  },
+  "timeline_summary": {
+    "run_duration": {
+      "start": "2025-12-17T17:06:51Z",
+      "end": "2025-12-18T01:02:26Z",
+      "duration_hours": 7.93
+    },
+    "key_decisions": [
+      {
+        "flow": "plan",
+        "decision": "ADR OPT-001 selected",
+        "option": "Standalone Module with Typed Struct"
+      },
+      {
+        "flow": "gate",
+        "decision": "MERGE verdict",
+        "note": "RSK-006 (coverage tooling) accepted"
+      },
+      {
+        "flow": "deploy",
+        "decision": "NOT_DEPLOYED verdict",
+        "note": "Branch protection not configured; merge and release succeeded"
+      }
+    ],
+    "key_commits": [
+      {
+        "sha": "ec0dd57f61c6b082291a2167ca6cc000f1cf73b0",
+        "flow": "plan",
+        "type": "checkpoint"
+      },
+      {
+        "sha": "80cd961944140b98158a5f104bb3be6ebba26c74",
+        "flow": "gate",
+        "type": "checkpoint"
+      },
+      {
+        "sha": "7268525783656c81c236658e6c1aa3a396147b65",
+        "flow": "deploy",
+        "type": "merge",
+        "pr_number": 1,
+        "tag": "cli-version-cmd-v1"
+      },
+      {
+        "sha": "773bc8044ae8a4e65405d0d50c0913c8b5b67364",
+        "flow": "deploy",
+        "type": "checkpoint"
+      }
+    ],
+    "github_artifacts": {
+      "issue_number": 1,
+      "issue_url": "https://github.com/EffortlessMetrics/demo-swarm/issues/1",
+      "pr_number": 1,
+      "pr_url": "https://github.com/d4nshields/demo-swarm/pull/1",
+      "release_tag": "cli-version-cmd-v1",
+      "release_url": "https://github.com/d4nshields/demo-swarm/releases/tag/cli-version-cmd-v1"
+    }
+  }
+}
